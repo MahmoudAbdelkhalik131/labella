@@ -15,8 +15,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     catch { tokenStore.clear(); setUser(null); }
     finally { setLoading(false); }
   };
-  useEffect(() => { const cookieToken = document.cookie.split("; ").find((r) => r.startsWith("token="))?.split("=")[1]; if (cookieToken && !localStorage.getItem("make_it_real_token")) tokenStore.set(decodeURIComponent(cookieToken)); void refresh(); }, []);
-  const login = async (email: string, password: string, admin = false) => { const res = await api.login({ email, password }, admin); tokenStore.set(res.token); await refresh(); toast.success("Welcome back to Make It Real"); };
+  useEffect(() => {
+    const cookieToken = document.cookie.split("; ").find((r) => r.startsWith("token="))?.split("=")[1];
+    if (cookieToken && !tokenStore.get()) {
+      tokenStore.set(decodeURIComponent(cookieToken));
+    }
+    void refresh();
+  }, []);
+  const login = async (email: string, password: string, admin = false) => { const res = await api.login({ email, password }, admin); tokenStore.set(res.token); await refresh(); toast.success("Welcome back to Labella"); };
   const logout = () => { tokenStore.clear(); setUser(null); toast("Signed out"); };
   const value = useMemo(() => ({ user, loading, isAuthed: !!user, refresh, login, logout }), [user, loading]);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

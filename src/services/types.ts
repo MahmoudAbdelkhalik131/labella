@@ -10,3 +10,12 @@ export type Review = { _id: string; comment: string; rate: number; user?: { name
 export type User = { _id: string; username: string; name: string; email: string; role?: string; active?: boolean; image?: string; hasPassword?: boolean; googleId?: string; address?: Address[]; wishlist?: Product[] | string[] };
 export type Address = { _id: string; street: string; city: string; state: string; zip: string };
 export type Cart = { items: { product: Pick<Product, '_id' | 'name' | 'cover'>; price: number; quantity: number }[]; totelPrice: number; taxPrice?: number; totelPriceAfterDiscount?: number; user?: string };
+export type Order = {
+  _id: string;
+  items: Cart["items"];
+  itemsPrice: number;
+  taxPrice: number;
+  totalPrice: number;
+  address?: Address;
+  createdAt?: string;
+};

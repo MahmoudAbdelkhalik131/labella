@@ -18,37 +18,47 @@ import Profile from "./pages/store/Profile";
 import Auth from "./pages/store/Auth";
 import SearchPage from "./pages/store/Search";
 import About from "./pages/store/About";
+import { TranslationProvider } from "./locales/TranslationContext";
+import AdminDashboard from "./pages/admin/Dashboard";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <AuthProvider>
-          <ShopProvider>
-            <Routes>
-              <Route element={<Layout />}>
-                <Route path="/" element={<Home />} />
-                <Route path="/shop" element={<Shop />} />
-                <Route path="/categories" element={<Categories />} />
-                <Route path="/products/:id" element={<ProductDetail />} />
-                <Route path="/cart" element={<Cart />} />
-                <Route path="/checkout" element={<Checkout />} />
-                <Route path="/wishlist" element={<Wishlist />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/search" element={<SearchPage />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/auth/:mode" element={<Auth />} />
-              </Route>
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </ShopProvider>
-        </AuthProvider>
-      </BrowserRouter>
-    </TooltipProvider>
+    <TranslationProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <AuthProvider>
+            <ShopProvider>
+              <Routes>
+                <Route element={<Layout />}>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/shop" element={<Shop />} />
+                  <Route path="/categories" element={<Categories />} />
+                  <Route path="/products/:id" element={<ProductDetail />} />
+                  <Route path="/cart" element={<Cart />} />
+                  <Route path="/checkout" element={<Checkout />} />
+                  <Route path="/wishlist" element={<Wishlist />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/search" element={<SearchPage />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/auth/:mode" element={<Auth />} />
+                  
+                  {/* Admin Routes */}
+                  <Route element={<ProtectedRoute allowedRoles={["admin", "employee"]} />}>
+                    <Route path="/admin" element={<AdminDashboard />} />
+                  </Route>
+                </Route>
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </ShopProvider>
+          </AuthProvider>
+        </BrowserRouter>
+      </TooltipProvider>
+    </TranslationProvider>
   </QueryClientProvider>
 );
 
