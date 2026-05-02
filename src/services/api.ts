@@ -1,9 +1,11 @@
 import { toast } from "sonner";
 
 const API_BASE =
-  (import.meta.env?.VITE_API_BASE as string) || "http://localhost:9000";
+  (import.meta.env.VITE_API_BASE as string | undefined)?.trim() ||
+  "http://localhost:4000";
 const API_PREFIX = `${API_BASE}/api/v1`;
 const TOKEN_KEY = "labella_token";
+console.log("API_BASE:", API_BASE);
 
 export const tokenStore = {
   get: () => localStorage.getItem(TOKEN_KEY) || readCookie("token"),
@@ -38,6 +40,7 @@ export async function apiFetch<T>(
   if (!(options.body instanceof FormData))
     headers.set("Content-Type", "application/json");
   if (token) headers.set("Authorization", `Bearer ${token}`);
+  headers.set("ngrok-skip-browser-warning", "true");
   const lang = localStorage.getItem("labella_lang") || "en";
   const url = new URL(`${usePrefix ? API_PREFIX : API_BASE}${path}`);
   url.searchParams.set("language", lang.toLowerCase());

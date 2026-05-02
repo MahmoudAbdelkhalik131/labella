@@ -9,9 +9,11 @@ import { money } from "@/components/storefront/ProductCard";
 import { cn } from "@/lib/utils";
 
 import { useTranslation } from "@/locales/TranslationContext";
+import { useShop } from "@/contexts/ShopContext";
 
 export default function Checkout() {
   const { t, isAr } = useTranslation();
+  const { refreshCart } = useShop();
   const [step, setStep] = useState(1);
   const [selected, setSelected] = useState("");
   const [address, setAddress] = useState({ street: "", city: "", state: "", zip: "" });
@@ -42,6 +44,7 @@ export default function Checkout() {
     const res = await api.post<ApiSingle<Order>>("/order", { address: selected });
     setPlacedOrder(res.data);
     toast.success("Order placed");
+    refreshCart();
     setStep(3);
   };
 

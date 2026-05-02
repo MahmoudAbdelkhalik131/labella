@@ -32,7 +32,7 @@ export default function AdminDashboard() {
   const [editingSubcategory, setEditingSubcategory] = useState<any>(null);
 
   // Form states
-  const [productForm, setProductForm] = useState({ name: "", description: "", price: 0, quantity: 10, category: "", subcategory: "" });
+  const [productForm, setProductForm] = useState({ name: "", description: "", price: "" as number | string, quantity: 10 as number | string, category: "", subcategory: "" });
   const [productCover, setProductCover] = useState<File | null>(null);
   const [productImages, setProductImages] = useState<File[]>([]);
   const [categoryForm, setCategoryForm] = useState({ name: "" });
@@ -122,7 +122,7 @@ export default function AdminDashboard() {
       setProductImages([]);
     } else {
       setEditingProduct(null);
-      setProductForm({ name: "", description: "", price: 0, quantity: 10, category: "", subcategory: "" });
+      setProductForm({ name: "", description: "", price: "", quantity: 10, category: "", subcategory: "" });
       setProductCover(null);
       setProductImages([]);
     }
@@ -240,11 +240,11 @@ export default function AdminDashboard() {
                     <div className="grid grid-cols-2 gap-4">
                       <div className="grid gap-2">
                         <Label htmlFor="price">{isAr ? "السعر" : "Price"}</Label>
-                        <Input id="price" type="number" value={productForm.price} onChange={(e) => setProductForm({...productForm, price: Number(e.target.value)})} />
+                        <Input id="price" type="number" value={productForm.price} onChange={(e) => setProductForm({...productForm, price: e.target.value === "" ? "" : Number(e.target.value)})} />
                       </div>
                       <div className="grid gap-2">
                         <Label htmlFor="qty">{isAr ? "الكمية" : "Quantity"}</Label>
-                        <Input id="qty" type="number" value={productForm.quantity} onChange={(e) => setProductForm({...productForm, quantity: Number(e.target.value)})} />
+                        <Input id="qty" type="number" value={productForm.quantity} onChange={(e) => setProductForm({...productForm, quantity: e.target.value === "" ? "" : Number(e.target.value)})} />
                       </div>
                     </div>
                     <div className="grid gap-2">

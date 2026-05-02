@@ -21,6 +21,7 @@ import About from "./pages/store/About";
 import { TranslationProvider } from "./locales/TranslationContext";
 import AdminDashboard from "./pages/admin/Dashboard";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +32,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <ScrollToTop />
           <AuthProvider>
             <ShopProvider>
               <Routes>

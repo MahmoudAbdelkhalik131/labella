@@ -139,5 +139,11 @@ export const en = {
     all: "All",
     placeholder_email: "Email address",
     review_placeholder: "Your thoughts"
+  },
+  search: {
+    title: "Search Results",
+    results: "Showing results for",
+    empty: "No products found",
+    empty_desc: "We couldn't find any products matching your search. Try different keywords."
   }
 };

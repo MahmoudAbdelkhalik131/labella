@@ -139,5 +139,11 @@ export const ar = {
     all: "الكل",
     placeholder_email: "البريد الإلكتروني",
     review_placeholder: "رأيك يهمنا"
+  },
+  search: {
+    title: "نتائج البحث",
+    results: "عرض نتائج",
+    empty: "لم يتم العثور على منتجات",
+    empty_desc: "لم نتمكن من العثور على أي منتجات تطابق بحثك. جربي كلمات مفتاحية أخرى."
   }
 };
