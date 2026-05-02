@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { Edit2, User as UserIcon, Shield, MapPin, Trash2, LogOut, Camera, X, Check, Loader2, ShoppingBag, ChevronRight, Package, Clock } from "lucide-react";
 import { api } from "@/services/api";
@@ -329,7 +330,7 @@ export default function Profile() {
         
         <div className="grid gap-4">
           {((orders.data as any)?.data || []).map((o: any) => (
-            <div key={o._id} className="overflow-hidden rounded-3xl glass-panel shadow-warm transition-all hover:shadow-glow">
+            <Link key={o._id} to={`/orders/${o._id}`} className="block overflow-hidden rounded-3xl glass-panel shadow-warm transition-all hover:shadow-glow hover:-translate-y-1">
               <div className="flex flex-col gap-6 p-6 md:flex-row md:items-center">
                 <div className="flex-1 space-y-2">
                   <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
@@ -339,7 +340,18 @@ export default function Profile() {
                     #{o._id.slice(-8).toUpperCase()}
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    {o.items.map((item: any, idx: number) => (
+                    {o.items?.map((item: any, idx: number) => (
+                      <div key={idx} className="flex items-center gap-2 rounded-xl bg-secondary/5 p-2 pr-3">
+                        <img 
+                          src={api.imgUrl(item.product?.cover)} 
+                          className="h-8 w-8 rounded-lg object-cover" 
+                          alt="" 
+                        />
+                        <span className="text-sm font-medium">{item.product?.name}</span>
+                        <span className="text-xs text-muted-foreground">x{item.quantity}</span>
+                      </div>
+                    ))}
+                    {(!o.items || o.items.length === 0) && o.cartItems?.map((item: any, idx: number) => (
                       <div key={idx} className="flex items-center gap-2 rounded-xl bg-secondary/5 p-2 pr-3">
                         <img 
                           src={api.imgUrl(item.product?.cover)} 
@@ -374,9 +386,12 @@ export default function Profile() {
                       {o.isDelivered ? (isAr ? "تم التوصيل" : "Delivered") : (isAr ? "جاري التوصيل" : "In Delivery")}
                     </div>
                   </div>
+                  <div className="flex items-center text-muted-foreground opacity-50 transition-opacity group-hover:opacity-100">
+                    <ChevronRight className={cn("h-5 w-5", isAr && "rotate-180")} />
+                  </div>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
           
           {((orders.data as any)?.data || []).length === 0 && (

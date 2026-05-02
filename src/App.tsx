@@ -18,12 +18,20 @@ import Profile from "./pages/store/Profile";
 import Auth from "./pages/store/Auth";
 import SearchPage from "./pages/store/Search";
 import About from "./pages/store/About";
+import OrderDetails from "./pages/store/OrderDetails";
 import { TranslationProvider } from "./locales/TranslationContext";
 import AdminDashboard from "./pages/admin/Dashboard";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import ScrollToTop from "./components/ScrollToTop";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      staleTime: 5 * 60 * 1000, // 5 minutes before considering data stale
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -45,6 +53,7 @@ const App = () => (
                   <Route path="/checkout" element={<Checkout />} />
                   <Route path="/wishlist" element={<Wishlist />} />
                   <Route path="/profile" element={<Profile />} />
+                  <Route path="/orders/:id" element={<OrderDetails />} />
                   <Route path="/search" element={<SearchPage />} />
                   <Route path="/about" element={<About />} />
                   <Route path="/auth/:mode" element={<Auth />} />
