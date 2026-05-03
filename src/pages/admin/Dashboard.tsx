@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { Link } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/services/api";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -11,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Package, ShoppingCart, Users, FolderTree, Trash2, CheckCircle, Truck, Edit, LayoutDashboard } from "lucide-react";
+import { Plus, Package, ShoppingCart, Users, FolderTree, Trash2, CheckCircle, Truck, Edit, LayoutDashboard, Eye } from "lucide-react";
 import { toast } from "sonner";
 import { money } from "@/components/storefront/ProductCard";
 import { useTranslation } from "@/locales/TranslationContext";
@@ -73,7 +74,6 @@ export default function AdminDashboard() {
 
   const saveCategory = useMutation({
     mutationFn: (data: any) => {
-      const isFormData = data instanceof FormData;
       return editingCategory
         ? api.put(`/categories/${editingCategory._id}`, data)
         : api.post("/categories", data);
@@ -198,33 +198,35 @@ export default function AdminDashboard() {
             <LayoutDashboard className="h-8 w-8" />
           </div>
           <div>
-            <h1 className="text-4xl font-bold text-secondary">{isAr ? "لوحة الإدارة" : "Admin Dashboard"}</h1>
-            <p className="text-muted-foreground">{isAr ? "إدارة منتجاتك وطلباتك وعملائك في مكان واحد." : "Manage your store's products, orders, and users."}</p>
+            <h1 className="text-2xl md:text-4xl font-bold text-secondary">{isAr ? "لوحة الإدارة" : "Admin Dashboard"}</h1>
+            <p className="text-sm text-muted-foreground hidden sm:block">{isAr ? "إدارة منتجاتك وطلباتك وعملائك في مكان واحد." : "Manage your store's products, orders, and users."}</p>
           </div>
         </div>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-5 lg:w-[750px] glass-panel">
-          <TabsTrigger value="products" className="flex gap-2"><Package className="h-4 w-4" /> {isAr ? "المنتجات" : "Products"}</TabsTrigger>
-          <TabsTrigger value="orders" className="flex gap-2"><ShoppingCart className="h-4 w-4" /> {isAr ? "الطلبات" : "Orders"}</TabsTrigger>
-          <TabsTrigger value="users" className="flex gap-2"><Users className="h-4 w-4" /> {isAr ? "المستخدمين" : "Users"}</TabsTrigger>
-          <TabsTrigger value="categories" className="flex gap-2"><FolderTree className="h-4 w-4" /> {isAr ? "الفئات" : "Categories"}</TabsTrigger>
-          <TabsTrigger value="subcategories" className="flex gap-2"><FolderTree className="h-4 w-4 opacity-70" /> {isAr ? "الفئات الفرعية" : "Subcategories"}</TabsTrigger>
-        </TabsList>
+        <div className="overflow-x-auto pb-2">
+          <TabsList className="flex w-max lg:w-[750px] glass-panel">
+            <TabsTrigger value="products" className="flex gap-2 whitespace-nowrap"><Package className="h-4 w-4" /> {isAr ? "المنتجات" : "Products"}</TabsTrigger>
+            <TabsTrigger value="orders" className="flex gap-2 whitespace-nowrap"><ShoppingCart className="h-4 w-4" /> {isAr ? "الطلبات" : "Orders"}</TabsTrigger>
+            <TabsTrigger value="users" className="flex gap-2 whitespace-nowrap"><Users className="h-4 w-4" /> {isAr ? "المستخدمين" : "Users"}</TabsTrigger>
+            <TabsTrigger value="categories" className="flex gap-2 whitespace-nowrap"><FolderTree className="h-4 w-4" /> {isAr ? "الفئات" : "Categories"}</TabsTrigger>
+            <TabsTrigger value="subcategories" className="flex gap-2 whitespace-nowrap"><FolderTree className="h-4 w-4 opacity-70" /> {isAr ? "الفئات الفرعية" : "Subcategories"}</TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent value="products">
           <Card className="glass-panel border-0 overflow-hidden shadow-warm">
-            <CardHeader className="flex flex-row items-center justify-between bg-secondary/5 border-b border-border/50">
+            <CardHeader className="flex flex-row items-center justify-between bg-secondary/5 border-b border-border/50 p-4 md:p-6">
               <div>
-                <CardTitle>{isAr ? "المنتجات" : "Products"}</CardTitle>
-                <CardDescription>{isAr ? "إدارة المخزون وقوائم المنتجات الخاصة بك." : "Manage your inventory and product listings."}</CardDescription>
+                <CardTitle className="text-lg md:text-xl">{isAr ? "المنتجات" : "Products"}</CardTitle>
+                <CardDescription className="hidden sm:block">{isAr ? "إدارة المخزون وقوائم المنتجات الخاصة بك." : "Manage your inventory and product listings."}</CardDescription>
               </div>
               <Dialog open={isProductModalOpen} onOpenChange={setIsProductModalOpen}>
                 <DialogTrigger asChild>
-                  <Button className="gap-2" onClick={() => openProductModal()}><Plus className="h-4 w-4" /> {isAr ? "إضافة منتج" : "Add Product"}</Button>
+                  <Button className="gap-2" size="sm" onClick={() => openProductModal()}><Plus className="h-4 w-4" /> {isAr ? "إضافة" : "Add"}</Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-[500px] glass-panel">
+                <DialogContent className="sm:max-w-[500px] glass-panel max-h-[90vh] overflow-y-auto">
                   <DialogHeader>
                     <DialogTitle>{editingProduct ? (isAr ? "تعديل المنتج" : "Edit Product") : (isAr ? "إضافة منتج جديد" : "Add New Product")}</DialogTitle>
                   </DialogHeader>
@@ -283,29 +285,13 @@ export default function AdminDashboard() {
                         onChange={(e) => setProductCover(e.target.files?.[0] || null)}
                       />
                     </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="images">{isAr ? "صور المنتج" : "Product images"}</Label>
-                      <Input
-                        id="images"
-                        type="file"
-                        accept="image/*"
-                        multiple
-                        disabled={!!editingProduct}
-                        onChange={(e) => setProductImages(Array.from(e.target.files || []))}
-                      />
-                    </div>
-                    {editingProduct && (
-                      <p className="text-xs text-muted-foreground">
-                        {isAr ? "تحديث الصور متاح فقط عند إنشاء منتج جديد حالياً." : "Image upload is currently supported on new product creation only."}
-                      </p>
-                    )}
                   </div>
                   <Button className="w-full" onClick={submitProduct}>{isAr ? "حفظ" : "Save Product"}</Button>
                 </DialogContent>
               </Dialog>
             </CardHeader>
-            <CardContent className="p-0">
-              <Table>
+            <CardContent className="p-0 overflow-x-auto">
+              <Table className="min-w-[600px]">
                 <TableHeader className="bg-muted/30">
                   <TableRow>
                     <TableHead className="px-6">{isAr ? "المنتج" : "Product"}</TableHead>
@@ -321,20 +307,20 @@ export default function AdminDashboard() {
                       <TableCell className="px-6">
                         <div className="flex items-center gap-3">
                           <img src={p.cover || "/placeholder.svg"} className="h-10 w-10 rounded-lg object-cover" />
-                          <span className="font-semibold text-secondary">{p.name}</span>
+                          <span className="font-semibold text-secondary text-sm">{p.name}</span>
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Badge variant="outline">{typeof p.category === 'string' ? p.category : p.category?.name || "Uncategorized"}</Badge>
+                        <Badge variant="outline" className="text-xs">{typeof p.category === 'string' ? p.category : p.category?.name || "Uncategorized"}</Badge>
                       </TableCell>
-                      <TableCell className="font-medium">{money(p.price)}</TableCell>
+                      <TableCell className="font-medium text-sm">{money(p.price)}</TableCell>
                       <TableCell>
-                        <span className={p.quantity < 5 ? "text-destructive font-bold" : ""}>{p.quantity}</span>
+                        <span className={cn("text-sm", p.quantity < 5 ? "text-destructive font-bold" : "")}>{p.quantity}</span>
                       </TableCell>
                       <TableCell className="text-right px-6">
-                        <div className="flex justify-end gap-2">
-                          <Button variant="ghost" size="icon" onClick={() => openProductModal(p)}><Edit className="h-4 w-4" /></Button>
-                          <Button variant="ghost" size="icon" onClick={() => {if(confirm(isAr ? "حذف هذا المنتج؟" : "Delete this product?")) deleteProduct.mutate(p._id)}}><Trash2 className="h-4 w-4 text-destructive" /></Button>
+                        <div className="flex justify-end gap-1">
+                          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openProductModal(p)}><Edit className="h-4 w-4" /></Button>
+                          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => {if(confirm(isAr ? "حذف هذا المنتج؟" : "Delete this product?")) deleteProduct.mutate(p._id)}}><Trash2 className="h-4 w-4 text-destructive" /></Button>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -347,12 +333,12 @@ export default function AdminDashboard() {
 
         <TabsContent value="orders">
           <Card className="glass-panel border-0 overflow-hidden shadow-warm">
-            <CardHeader className="bg-secondary/5 border-b border-border/50">
-              <CardTitle>{isAr ? "الطلبات الأخيرة" : "Recent Orders"}</CardTitle>
-              <CardDescription>{isAr ? "مراقبة ومعالجة طلبات العملاء." : "Monitor and process customer orders."}</CardDescription>
+            <CardHeader className="bg-secondary/5 border-b border-border/50 p-4 md:p-6">
+              <CardTitle className="text-lg md:text-xl">{isAr ? "الطلبات الأخيرة" : "Recent Orders"}</CardTitle>
+              <CardDescription className="hidden sm:block">{isAr ? "مراقبة ومعالجة طلبات العملاء." : "Monitor and process customer orders."}</CardDescription>
             </CardHeader>
-            <CardContent className="p-0">
-              <Table>
+            <CardContent className="p-0 overflow-x-auto">
+              <Table className="min-w-[800px]">
                 <TableHeader className="bg-muted/30">
                   <TableRow>
                     <TableHead className="px-6">{isAr ? "رقم الطلب" : "Order ID"}</TableHead>
@@ -367,27 +353,32 @@ export default function AdminDashboard() {
                   {orders.data?.data?.map((o: any) => (
                     <TableRow key={o._id} className="hover:bg-muted/20 transition-colors">
                       <TableCell className="px-6 font-mono text-xs text-muted-foreground">#{o._id.slice(-8).toUpperCase()}</TableCell>
-                      <TableCell className="font-medium text-secondary">{o.user?.name || o.user?.username || "Guest"}</TableCell>
-                      <TableCell className="font-bold">{money(o.totalPrice)}</TableCell>
+                      <TableCell className="font-medium text-secondary text-sm">{o.user?.name || o.user?.username || "Guest"}</TableCell>
+                      <TableCell className="font-bold text-sm">{money(o.totalPrice)}</TableCell>
                       <TableCell>
-                        <Badge variant={o.isPaid ? "default" : "outline"} className={o.isPaid ? "bg-green-100 text-green-700 hover:bg-green-100" : ""}>
+                        <Badge variant={o.isPaid ? "default" : "outline"} className={cn("text-[10px]", o.isPaid ? "bg-green-100 text-green-700 hover:bg-green-100" : "")}>
                           {o.isPaid ? (isAr ? "تم الدفع" : "Paid") : (isAr ? "معلق" : "Pending")}
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        <Badge variant={o.isDelivered ? "default" : "secondary"} className={o.isDelivered ? "bg-blue-100 text-blue-700 hover:bg-blue-100" : ""}>
+                        <Badge variant={o.isDelivered ? "default" : "secondary"} className={cn("text-[10px]", o.isDelivered ? "bg-blue-100 text-blue-700 hover:bg-blue-100" : "")}>
                           {o.isDelivered ? (isAr ? "تم التوصيل" : "Delivered") : (isAr ? "جاري المعالجة" : "Processing")}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right px-6">
                         <div className="flex justify-end gap-2">
+                          <Button size="sm" variant="ghost" className="h-8 w-8 p-0" asChild title={isAr ? "عرض التفاصيل" : "View Details"}>
+                            <Link to={`/orders/${o._id}`}>
+                              <Eye className="h-4 w-4" />
+                            </Link>
+                          </Button>
                           {!o.isPaid && (
-                            <Button size="sm" variant="outline" className="h-8 gap-1" onClick={() => updateOrderStatus.mutate({ id: o._id, status: "pay" })}>
+                            <Button size="sm" variant="outline" className="h-8 gap-1 text-xs" onClick={() => updateOrderStatus.mutate({ id: o._id, status: "pay" })}>
                               <CheckCircle className="h-3 w-3" /> {isAr ? "دفع" : "Pay"}
                             </Button>
                           )}
                           {!o.isDelivered && (
-                            <Button size="sm" variant="outline" className="h-8 gap-1" onClick={() => updateOrderStatus.mutate({ id: o._id, status: "deliver" })}>
+                            <Button size="sm" variant="outline" className="h-8 gap-1 text-xs" onClick={() => updateOrderStatus.mutate({ id: o._id, status: "deliver" })}>
                               <Truck className="h-3 w-3" /> {isAr ? "توصيل" : "Deliver"}
                             </Button>
                           )}
@@ -408,12 +399,12 @@ export default function AdminDashboard() {
 
         <TabsContent value="users">
           <Card className="glass-panel border-0 overflow-hidden shadow-warm">
-            <CardHeader className="bg-secondary/5 border-b border-border/50">
-              <CardTitle>{isAr ? "إدارة المستخدمين" : "User Management"}</CardTitle>
-              <CardDescription>{isAr ? "عرض وإدارة حسابات المستخدمين وأدوارهم." : "View and manage user accounts and roles."}</CardDescription>
+            <CardHeader className="bg-secondary/5 border-b border-border/50 p-4 md:p-6">
+              <CardTitle className="text-lg md:text-xl">{isAr ? "إدارة المستخدمين" : "User Management"}</CardTitle>
+              <CardDescription className="hidden sm:block">{isAr ? "عرض وإدارة حسابات المستخدمين وأدوارهم." : "View and manage user accounts and roles."}</CardDescription>
             </CardHeader>
-            <CardContent className="p-0">
-              <Table>
+            <CardContent className="p-0 overflow-x-auto">
+              <Table className="min-w-[700px]">
                 <TableHeader className="bg-muted/30">
                   <TableRow>
                     <TableHead className="px-6">{isAr ? "الاسم" : "Name"}</TableHead>
@@ -428,22 +419,22 @@ export default function AdminDashboard() {
                     <TableRow key={u._id} className="hover:bg-muted/20 transition-colors">
                       <TableCell className="px-6">
                         <div className="flex items-center gap-3">
-                          <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center font-bold text-primary">{(u.name || u.username || "?")[0].toUpperCase()}</div>
-                          <span className="font-medium text-secondary">{u.name || u.username}</span>
+                          <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center font-bold text-primary text-xs">{(u.name || u.username || "?")[0].toUpperCase()}</div>
+                          <span className="font-medium text-secondary text-sm">{u.name || u.username}</span>
                         </div>
                       </TableCell>
-                      <TableCell className="text-muted-foreground">{u.email}</TableCell>
+                      <TableCell className="text-muted-foreground text-sm">{u.email}</TableCell>
                       <TableCell>
-                        <Badge variant={u.role === "admin" ? "default" : "secondary"}>{u.role}</Badge>
+                        <Badge variant={u.role === "admin" ? "default" : "secondary"} className="text-[10px]">{u.role}</Badge>
                       </TableCell>
                       <TableCell>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 text-xs">
                           <div className={cn("h-2 w-2 rounded-full", u.active ? "bg-green-500" : "bg-red-500")} />
                           {u.active ? (isAr ? "نشط" : "Active") : (isAr ? "غير نشط" : "Inactive")}
                         </div>
                       </TableCell>
                       <TableCell className="text-right px-6">
-                        <Button variant="ghost" size="sm" disabled={u.role === "admin"}>{isAr ? "تعديل الدور" : "Edit Role"}</Button>
+                        <Button variant="ghost" size="sm" className="text-xs" disabled={u.role === "admin"}>{isAr ? "تعديل" : "Edit"}</Button>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -455,14 +446,14 @@ export default function AdminDashboard() {
 
         <TabsContent value="categories">
           <Card className="glass-panel border-0 overflow-hidden shadow-warm">
-            <CardHeader className="flex flex-row items-center justify-between bg-secondary/5 border-b border-border/50">
+            <CardHeader className="flex flex-row items-center justify-between bg-secondary/5 border-b border-border/50 p-4 md:p-6">
               <div>
-                <CardTitle>{isAr ? "الفئات" : "Categories"}</CardTitle>
-                <CardDescription>{isAr ? "تنظيم منتجاتك باستخدام الفئات." : "Organize your products with categories."}</CardDescription>
+                <CardTitle className="text-lg md:text-xl">{isAr ? "الفئات" : "Categories"}</CardTitle>
+                <CardDescription className="hidden sm:block">{isAr ? "تنظيم منتجاتك باستخدام الفئات." : "Organize your products with categories."}</CardDescription>
               </div>
               <Dialog open={isCategoryModalOpen} onOpenChange={setIsCategoryModalOpen}>
                 <DialogTrigger asChild>
-                  <Button variant="outline" className="gap-2" onClick={() => openCategoryModal()}><Plus className="h-4 w-4" /> {isAr ? "فئة جديدة" : "New Category"}</Button>
+                  <Button variant="outline" size="sm" className="gap-2" onClick={() => openCategoryModal()}><Plus className="h-4 w-4" /> {isAr ? "جديد" : "New"}</Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[400px] glass-panel">
                   <DialogHeader>
@@ -473,22 +464,13 @@ export default function AdminDashboard() {
                       <Label htmlFor="cat-name">{isAr ? "اسم الفئة" : "Category Name"}</Label>
                       <Input id="cat-name" value={categoryForm.name} onChange={(e) => setCategoryForm({name: e.target.value})} />
                     </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="cat-image">{isAr ? "الصورة" : "Image"}</Label>
-                      <Input 
-                        id="cat-image" 
-                        type="file" 
-                        accept="image/*" 
-                        onChange={(e) => setCategoryImage(e.target.files?.[0] || null)} 
-                      />
-                    </div>
                   </div>
                   <Button className="w-full" onClick={submitCategory}>{isAr ? "حفظ" : "Save Category"}</Button>
                 </DialogContent>
               </Dialog>
             </CardHeader>
-            <CardContent className="p-0">
-              <Table>
+            <CardContent className="p-0 overflow-x-auto">
+              <Table className="min-w-[500px]">
                 <TableHeader className="bg-muted/30">
                   <TableRow>
                     <TableHead className="px-6">{isAr ? "الاسم" : "Name"}</TableHead>
@@ -499,19 +481,19 @@ export default function AdminDashboard() {
                 <TableBody>
                    {categories.data?.data?.map((c: any) => (
                     <TableRow key={c._id} className="hover:bg-muted/20 transition-colors">
-                      <TableCell className="px-6 font-semibold text-secondary">
+                      <TableCell className="px-6 font-semibold text-secondary text-sm">
                         <div className="flex items-center gap-3">
                           <img src={api.imgUrl(c.image)} className="h-8 w-8 rounded object-cover" />
                           {c.name}
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Badge variant="secondary">0</Badge>
+                        <Badge variant="secondary" className="text-xs">0</Badge>
                       </TableCell>
                       <TableCell className="text-right px-6">
-                        <div className="flex justify-end gap-2">
-                          <Button variant="ghost" size="icon" onClick={() => openCategoryModal(c)}><Edit className="h-4 w-4" /></Button>
-                          <Button variant="ghost" size="icon" onClick={() => {if(confirm(isAr ? "حذف هذه الفئة؟" : "Delete this category?")) api.del(`/categories/${c._id}`).then(()=>queryClient.invalidateQueries({queryKey:["admin-categories"]}))}}><Trash2 className="h-4 w-4 text-destructive" /></Button>
+                        <div className="flex justify-end gap-1">
+                          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openCategoryModal(c)}><Edit className="h-4 w-4" /></Button>
+                          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => {if(confirm(isAr ? "حذف هذه الفئة؟" : "Delete this category?")) api.del(`/categories/${c._id}`).then(()=>queryClient.invalidateQueries({queryKey:["admin-categories"]}))}}><Trash2 className="h-4 w-4 text-destructive" /></Button>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -523,14 +505,14 @@ export default function AdminDashboard() {
         </TabsContent>
         <TabsContent value="subcategories">
           <Card className="glass-panel border-0 overflow-hidden shadow-warm">
-            <CardHeader className="flex flex-row items-center justify-between bg-secondary/5 border-b border-border/50">
+            <CardHeader className="flex flex-row items-center justify-between bg-secondary/5 border-b border-border/50 p-4 md:p-6">
               <div>
-                <CardTitle>{isAr ? "الفئات الفرعية" : "Subcategories"}</CardTitle>
-                <CardDescription>{isAr ? "تنظيم أعمق لمنتجاتك." : "Deepen your product organization."}</CardDescription>
+                <CardTitle className="text-lg md:text-xl">{isAr ? "الفئات الفرعية" : "Subcategories"}</CardTitle>
+                <CardDescription className="hidden sm:block">{isAr ? "تنظيم أعمق لمنتجاتك." : "Deepen your product organization."}</CardDescription>
               </div>
               <Dialog open={isSubcategoryModalOpen} onOpenChange={setIsSubcategoryModalOpen}>
                 <DialogTrigger asChild>
-                  <Button variant="outline" className="gap-2" onClick={() => openSubcategoryModal()}><Plus className="h-4 w-4" /> {isAr ? "فئة فرعية جديدة" : "New Subcategory"}</Button>
+                  <Button variant="outline" size="sm" className="gap-2" onClick={() => openSubcategoryModal()}><Plus className="h-4 w-4" /> {isAr ? "جديد" : "New"}</Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[400px] glass-panel">
                   <DialogHeader>
@@ -541,26 +523,13 @@ export default function AdminDashboard() {
                       <Label htmlFor="sub-name">{isAr ? "الاسم" : "Name"}</Label>
                       <Input id="sub-name" value={subcategoryForm.name} onChange={(e) => setSubcategoryForm({...subcategoryForm, name: e.target.value})} />
                     </div>
-                    <div className="grid gap-2">
-                      <Label>{isAr ? "الفئة الرئيسية" : "Parent Category"}</Label>
-                      <Select value={subcategoryForm.category} onValueChange={(v) => setSubcategoryForm({...subcategoryForm, category: v})}>
-                        <SelectTrigger>
-                          <SelectValue placeholder={isAr ? "اختر فئة" : "Select category"} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {categories.data?.data?.map((c: any) => (
-                            <SelectItem key={c._id} value={c._id}>{c.name}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
                   </div>
                   <Button className="w-full" onClick={() => saveSubcategory.mutate(subcategoryForm)}>{isAr ? "حفظ" : "Save Subcategory"}</Button>
                 </DialogContent>
               </Dialog>
             </CardHeader>
-            <CardContent className="p-0">
-              <Table>
+            <CardContent className="p-0 overflow-x-auto">
+              <Table className="min-w-[500px]">
                 <TableHeader className="bg-muted/30">
                   <TableRow>
                     <TableHead className="px-6">{isAr ? "الاسم" : "Name"}</TableHead>
@@ -571,14 +540,14 @@ export default function AdminDashboard() {
                 <TableBody>
                   {subcategories.data?.data?.map((s: any) => (
                     <TableRow key={s._id} className="hover:bg-muted/20 transition-colors">
-                      <TableCell className="px-6 font-semibold text-secondary">{s.name}</TableCell>
+                      <TableCell className="px-6 font-semibold text-secondary text-sm">{s.name}</TableCell>
                       <TableCell>
-                        <Badge variant="outline">{typeof s.category === 'string' ? s.category : s.category?.name || "None"}</Badge>
+                        <Badge variant="outline" className="text-xs">{typeof s.category === 'string' ? s.category : s.category?.name || "None"}</Badge>
                       </TableCell>
                       <TableCell className="text-right px-6">
-                        <div className="flex justify-end gap-2">
-                          <Button variant="ghost" size="icon" onClick={() => openSubcategoryModal(s)}><Edit className="h-4 w-4" /></Button>
-                          <Button variant="ghost" size="icon" onClick={() => {if(confirm(isAr ? "حذف هذه الفئة الفرعية؟" : "Delete this subcategory?")) api.del(`/subcategories/${s._id}`).then(()=>queryClient.invalidateQueries({queryKey:["admin-subcategories"]}))}}><Trash2 className="h-4 w-4 text-destructive" /></Button>
+                        <div className="flex justify-end gap-1">
+                          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openSubcategoryModal(s)}><Edit className="h-4 w-4" /></Button>
+                          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => {if(confirm(isAr ? "حذف هذه الفئة الفرعية؟" : "Delete this subcategory?")) api.del(`/subcategories/${s._id}`).then(()=>queryClient.invalidateQueries({queryKey:["admin-subcategories"]}))}}><Trash2 className="h-4 w-4 text-destructive" /></Button>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -592,4 +561,3 @@ export default function AdminDashboard() {
     </div>
   );
 }
-

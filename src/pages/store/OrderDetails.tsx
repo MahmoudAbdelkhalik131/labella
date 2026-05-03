@@ -26,6 +26,18 @@ export default function OrderDetails() {
     );
   }
 
+  if (orderQuery.isError) {
+    return (
+      <div className="section-shell py-12 text-center">
+        <h1 className="text-3xl font-bold text-destructive mb-4">{isAr ? "حدث خطأ أثناء تحميل الطلب" : "Error Loading Order"}</h1>
+        <p className="mb-6 text-muted-foreground">{(orderQuery.error as Error)?.message || "Unknown error"}</p>
+        <Link to="/profile" className="text-primary hover:underline">
+          {isAr ? "العودة إلى الملف الشخصي" : "Back to Profile"}
+        </Link>
+      </div>
+    );
+  }
+
   if (!o) {
     return (
       <div className="section-shell py-12 text-center">
@@ -36,6 +48,16 @@ export default function OrderDetails() {
       </div>
     );
   }
+
+  const renderDate = (dateString?: string) => {
+    if (!dateString) return "—";
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return "—";
+    return date.toLocaleString(isAr ? "ar-EG" : "en-US", {
+      dateStyle: "long",
+      timeStyle: "short",
+    });
+  };
 
   return (
     <div className="section-shell py-12" dir={isAr ? "rtl" : "ltr"}>
@@ -48,14 +70,11 @@ export default function OrderDetails() {
         <div>
           <h1 className="text-4xl font-bold text-secondary">{isAr ? "تفاصيل الطلب" : "Order Details"}</h1>
           <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
-            <span className="font-mono uppercase">#{o._id}</span>
+            <span className="font-mono uppercase">#{o?._id || "---"}</span>
             <span>•</span>
             <span className="flex items-center gap-1">
               <Clock className="h-3 w-3" />
-              {new Date(o.createdAt).toLocaleDateString(isAr ? "ar-EG" : "en-US", {
-                dateStyle: "long",
-                timeStyle: "short",
-              })}
+              {renderDate(o?.createdAt)}
             </span>
           </div>
         </div>
@@ -84,50 +103,56 @@ export default function OrderDetails() {
           <div className="rounded-3xl glass-panel p-6 sm:p-8 shadow-warm">
             <h2 className="mb-6 text-2xl font-bold text-secondary">{isAr ? "المنتجات" : "Items"}</h2>
             <div className="flex flex-col gap-4">
-              {o.cartItems?.map((item: any, idx: number) => (
-                <div key={idx} className="flex items-center gap-4 rounded-2xl bg-background/40 p-4 border border-border/50">
-                  <div className="h-20 w-20 shrink-0 overflow-hidden rounded-xl border border-border bg-white">
-                    <img 
-                      src={api.imgUrl(item.product?.cover)} 
-                      alt={item.product?.name}
-                      className="h-full w-full object-contain p-2"
-                    />
-                  </div>
-                  <div className="flex flex-1 flex-col sm:flex-row sm:items-center sm:justify-between">
-                    <div>
-                      <h3 className="font-bold text-secondary text-lg">{item.product?.name}</h3>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        {isAr ? "الكمية:" : "Qty:"} <span className="font-semibold text-foreground">{item.quantity}</span>
-                      </p>
+              {o?.cartItems?.map((item: any, idx: number) => {
+                if (!item) return null;
+                return (
+                  <div key={idx} className="flex items-center gap-4 rounded-2xl bg-background/40 p-4 border border-border/50">
+                    <div className="h-20 w-20 shrink-0 overflow-hidden rounded-xl border border-border bg-white">
+                      <img 
+                        src={api.imgUrl(item?.product?.cover)} 
+                        alt={item?.product?.name || "Product"}
+                        className="h-full w-full object-contain p-2"
+                      />
                     </div>
-                    <div className="mt-2 sm:mt-0 text-xl font-bold text-secondary">
-                      {money(item.price)}
-                    </div>
-                  </div>
-                </div>
-              ))}
-              {(!o.cartItems || o.cartItems.length === 0) && o.items?.map((item: any, idx: number) => (
-                 <div key={idx} className="flex items-center gap-4 rounded-2xl bg-background/40 p-4 border border-border/50">
-                  <div className="h-20 w-20 shrink-0 overflow-hidden rounded-xl border border-border bg-white">
-                    <img 
-                      src={api.imgUrl(item.product?.cover)} 
-                      alt={item.product?.name}
-                      className="h-full w-full object-contain p-2"
-                    />
-                  </div>
-                  <div className="flex flex-1 flex-col sm:flex-row sm:items-center sm:justify-between">
-                    <div>
-                      <h3 className="font-bold text-secondary text-lg">{item.product?.name}</h3>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        {isAr ? "الكمية:" : "Qty:"} <span className="font-semibold text-foreground">{item.quantity}</span>
-                      </p>
-                    </div>
-                    <div className="mt-2 sm:mt-0 text-xl font-bold text-secondary">
-                      {money(item.price)}
+                    <div className="flex flex-1 flex-col sm:flex-row sm:items-center sm:justify-between">
+                      <div>
+                        <h3 className="font-bold text-secondary text-lg">{item?.product?.name || "Product"}</h3>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {isAr ? "الكمية:" : "Qty:"} <span className="font-semibold text-foreground">{item?.quantity || 1}</span>
+                        </p>
+                      </div>
+                      <div className="mt-2 sm:mt-0 text-xl font-bold text-secondary">
+                        {money(item?.price || 0)}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
+              {(!o?.cartItems || o.cartItems.length === 0) && o?.items?.map((item: any, idx: number) => {
+                if (!item) return null;
+                return (
+                  <div key={idx} className="flex items-center gap-4 rounded-2xl bg-background/40 p-4 border border-border/50">
+                    <div className="h-20 w-20 shrink-0 overflow-hidden rounded-xl border border-border bg-white">
+                      <img 
+                        src={api.imgUrl(item?.product?.cover)} 
+                        alt={item?.product?.name || "Product"}
+                        className="h-full w-full object-contain p-2"
+                      />
+                    </div>
+                    <div className="flex flex-1 flex-col sm:flex-row sm:items-center sm:justify-between">
+                      <div>
+                        <h3 className="font-bold text-secondary text-lg">{item?.product?.name || "Product"}</h3>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {isAr ? "الكمية:" : "Qty:"} <span className="font-semibold text-foreground">{item?.quantity || 1}</span>
+                        </p>
+                      </div>
+                      <div className="mt-2 sm:mt-0 text-xl font-bold text-secondary">
+                        {money(item?.price || 0)}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -142,7 +167,7 @@ export default function OrderDetails() {
                 <span>{isAr ? "طريقة الدفع" : "Payment Method"}</span>
                 <span className="flex items-center gap-1.5 font-medium text-foreground uppercase">
                   <CreditCard className="h-4 w-4" />
-                  {o.paymentMethodType}
+                  {o.payment || "cash"}
                 </span>
               </div>
               
@@ -150,32 +175,32 @@ export default function OrderDetails() {
               
               <div className="flex items-center justify-between text-muted-foreground">
                 <span>{isAr ? "المجموع الفرعي" : "Subtotal"}</span>
-                <span>{money(o.totalPrice - (o.shippingPrice || 0) - (o.taxPrice || 0))}</span>
+                <span>{money((o?.totalPrice || 0) - (o?.shippingPrice || 0) - (o?.taxPrice || 0))}</span>
               </div>
               
-              {(o.taxPrice || 0) > 0 && (
+              {(o?.taxPrice || 0) > 0 && (
                 <div className="flex items-center justify-between text-muted-foreground">
                   <span>{isAr ? "الضريبة" : "Tax"}</span>
-                  <span>{money(o.taxPrice)}</span>
+                  <span>{money(o?.taxPrice || 0)}</span>
                 </div>
               )}
               
               <div className="flex items-center justify-between text-muted-foreground">
                 <span>{isAr ? "الشحن" : "Shipping"}</span>
-                <span>{money(o.shippingPrice || 0)}</span>
+                <span>{money(o?.shippingPrice || 0)}</span>
               </div>
               
               <div className="my-4 h-px w-full bg-border" />
               
               <div className="flex items-center justify-between text-xl font-bold text-secondary">
                 <span>{isAr ? "الإجمالي" : "Total"}</span>
-                <span>{money(o.totalPrice)}</span>
+                <span>{money(o?.totalPrice || 0)}</span>
               </div>
             </div>
           </div>
 
           {/* Shipping Address */}
-          {o.address && (
+          {o?.address && (
             <div className="rounded-3xl glass-panel p-6 shadow-warm">
               <h2 className="mb-4 text-xl font-bold text-secondary flex items-center gap-2">
                 <MapPin className="h-5 w-5" />
@@ -184,11 +209,11 @@ export default function OrderDetails() {
               <div className="rounded-2xl bg-background/40 p-4 border border-border/50 text-sm">
                 <div className="space-y-1.5">
                   <p className="font-bold text-foreground text-base">
-                    {o.address.alias || o.user?.name || (isAr ? "العنوان" : "Address")}
+                    {o.address?.alias || o.user?.name || (isAr ? "العنوان" : "Address")}
                   </p>
-                  <p className="text-muted-foreground">{o.address.details || o.address.street}</p>
+                  <p className="text-muted-foreground">{o.address?.details || o.address?.street || ""}</p>
                   <p className="text-muted-foreground">
-                    {[o.address.city, o.address.state, o.address.zip, o.address.phone].filter(Boolean).join(", ")}
+                    {[o.address?.city, o.address?.state, o.address?.zip, o.address?.phone].filter(Boolean).join(", ")}
                   </p>
                 </div>
               </div>
