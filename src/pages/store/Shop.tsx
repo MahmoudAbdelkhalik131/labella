@@ -3,18 +3,101 @@ import { useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { SlidersHorizontal, X } from "lucide-react";
 import { api } from "@/services/api";
-import type { ApiList, Category, Product } from "@/services/types";
+import type { ApiList, Category, Product, Subcategory } from "@/services/types";
 import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/storefront/ProductCard";
 import { ProductSkeletonGrid, QuickView, SectionTitle } from "@/components/storefront/StoreUi";
 import { useTranslation } from "@/locales/TranslationContext";
 import { cn } from "@/lib/utils";
 
+interface FilterProps {
+  t: any;
+  categories: Category[];
+  subcategories: Subcategory[];
+  category: string;
+  subcategory: string;
+  max: number;
+  rating: number;
+  onCategoryChange: (cid: string) => void;
+  onSubcategoryChange: (sid: string) => void;
+  onMaxChange: (val: number) => void;
+  onRatingChange: (val: number) => void;
+  isAr: boolean;
+}
+
+const FiltersContent = ({ 
+  t, 
+  categories, 
+  subcategories,
+  category, 
+  subcategory, 
+  max, 
+  rating, 
+  onCategoryChange, 
+  onSubcategoryChange,
+  onMaxChange, 
+  onRatingChange 
+}: FilterProps) => (
+  <div className="space-y-6">
+    <div>
+      <label className="text-sm font-semibold text-secondary">{t.shop.category}</label>
+      <select 
+        className="mt-2 w-full rounded-xl border border-input bg-background p-3 text-sm" 
+        value={category} 
+        onChange={e => onCategoryChange(e.target.value)}
+      >
+        <option value="">{t.common.all}</option>
+        {categories?.map(c => <option key={c._id} value={c._id}>{c.name}</option>)}
+      </select>
+    </div>
+
+    {category && (
+      <div className="animate-in fade-in slide-in-from-top-2 duration-300">
+        <label className="text-sm font-semibold text-secondary">{t.shop.subcategory}</label>
+        <select 
+          className="mt-2 w-full rounded-xl border border-input bg-background p-3 text-sm" 
+          value={subcategory} 
+          onChange={e => onSubcategoryChange(e.target.value)}
+        >
+          <option value="">{t.common.all}</option>
+          {subcategories?.map(s => <option key={s._id} value={s._id}>{s.name}</option>)}
+        </select>
+      </div>
+    )}
+
+    <div>
+      <label className="block text-sm font-semibold text-secondary">{t.shop.max_price}: ${max}</label>
+      <input 
+        className="mt-2 w-full accent-secondary" 
+        type="range" 
+        min="10" 
+        max="20000" 
+        step="100"
+        value={max} 
+        onChange={e => onMaxChange(Number(e.target.value))}
+      />
+    </div>
+
+    <div>
+      <label className="block text-sm font-semibold text-secondary">{t.shop.min_rating}</label>
+      <select 
+        className="mt-2 w-full rounded-xl border border-input bg-background p-3 text-sm" 
+        value={rating} 
+        onChange={e => onRatingChange(Number(e.target.value))}
+      >
+        <option value="0">{t.shop.any}</option>
+        <option value="4">{t.shop.stars_4}</option>
+        <option value="3">{t.shop.stars_3}</option>
+      </select>
+    </div>
+  </div>
+);
+
 export default function Shop() { 
   const { t, isAr }=useTranslation(); 
   const [params,setParams]=useSearchParams(); 
   const [quick,setQuick]=useState<Product|null>(null); 
-  const [max,setMax]=useState(50000); 
+  const [max,setMax]=useState(20000); 
   const [rating,setRating]=useState(0); 
   const [showFilters, setShowFilters] = useState(false);
 
@@ -33,6 +116,12 @@ export default function Shop() {
     queryFn: () => api.get<ApiList<Category>>("/categories")
   }); 
 
+  const subcategories = useQuery({
+    queryKey: ["subcategories", category],
+    enabled: !!category,
+    queryFn: () => api.get<ApiList<Subcategory>>(`/categories/${category}/subcategories`)
+  });
+
   const filtered = useMemo(() => {
     return (products.data?.data || []).filter(p => {
       const cid = typeof p.category === "string" ? p.category : p.category?._id; 
@@ -44,47 +133,28 @@ export default function Shop() {
     });
   }, [products.data, category, subcategory, max, rating]);
 
-  const FiltersContent = () => (
-    <div className="space-y-6">
-      <div>
-        <label className="text-sm font-semibold text-secondary">{t.shop.category}</label>
-        <select 
-          className="mt-2 w-full rounded-xl border border-input bg-background p-3 text-sm" 
-          value={category} 
-          onChange={e => setParams({sort, search, category: e.target.value, subcategory})}
-        >
-          <option value="">{t.common.all}</option>
-          {categories.data?.data?.map(c => <option key={c._id} value={c._id}>{c.name}</option>)}
-        </select>
-      </div>
+  const handleCategoryChange = (cid: string) => {
+    setParams({ sort, search, category: cid, subcategory: "" });
+  };
 
-      <div>
-        <label className="block text-sm font-semibold text-secondary">{t.shop.max_price}: ${max}</label>
-        <input 
-          className="mt-2 w-full accent-secondary" 
-          type="range" 
-          min="10" 
-          max="50000" 
-          step="100"
-          value={max} 
-          onChange={e => setMax(Number(e.target.value))}
-        />
-      </div>
+  const handleSubcategoryChange = (sid: string) => {
+    setParams({ sort, search, category, subcategory: sid });
+  };
 
-      <div>
-        <label className="block text-sm font-semibold text-secondary">{t.shop.min_rating}</label>
-        <select 
-          className="mt-2 w-full rounded-xl border border-input bg-background p-3 text-sm" 
-          value={rating} 
-          onChange={e => setRating(Number(e.target.value))}
-        >
-          <option value="0">{t.shop.any}</option>
-          <option value="4">{t.shop.stars_4}</option>
-          <option value="3">{t.shop.stars_3}</option>
-        </select>
-      </div>
-    </div>
-  );
+  const sharedFilterProps = {
+    t,
+    categories: categories.data?.data || [],
+    subcategories: subcategories.data?.data || [],
+    category,
+    subcategory,
+    max,
+    rating,
+    onCategoryChange: handleCategoryChange,
+    onSubcategoryChange: handleSubcategoryChange,
+    onMaxChange: setMax,
+    onRatingChange: setRating,
+    isAr
+  };
 
   return (
     <div className="section-shell py-10" dir={isAr ? "rtl" : "ltr"}>
@@ -120,7 +190,7 @@ export default function Shop() {
             <SlidersHorizontal className="h-5 w-5" />
             {t.shop.filters}
           </h3>
-          <FiltersContent />
+          <FiltersContent {...sharedFilterProps} />
         </aside>
 
         {/* Mobile Filter Drawer */}
@@ -136,7 +206,7 @@ export default function Shop() {
                   <X />
                 </Button>
               </div>
-              <FiltersContent />
+              <FiltersContent {...sharedFilterProps} />
               <Button className="mt-8 w-full" onClick={() => setShowFilters(false)}>
                 {isAr ? "إظهار النتائج" : "Show Results"}
               </Button>

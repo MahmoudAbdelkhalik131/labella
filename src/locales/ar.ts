@@ -33,6 +33,7 @@ export const ar = {
     title: "جميع أساسيات الجمال",
     filters: "تصفية",
     category: "الفئة",
+    subcategory: "الفئة الفرعية",
     max_price: "أقصى سعر",
     min_rating: "التقييم",
     any: "الكل",

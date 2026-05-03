@@ -20,11 +20,11 @@ export default function Home() {
   });
   const trending = useQuery({
     queryKey: ["products", "trending"],
-    queryFn: () => api.get<ApiList<Product>>("/products?sort=-sold&limit=8"),
+    queryFn: () => api.get<ApiList<Product>>("/products?sort=-sold&limit=4"),
   });
   const arrivals = useQuery({
     queryKey: ["products", "arrivals"],
-    queryFn: () => api.get<ApiList<Product>>("/products?sort=-createdAt&limit=8"),
+    queryFn: () => api.get<ApiList<Product>>("/products?sort=-createdAt&limit=4"),
   });
   const sale = (arrivals.data?.data || []).filter(
     (p) => p.priceAfterDiscount && p.priceAfterDiscount < p.price
@@ -63,7 +63,7 @@ export default function Home() {
       </section>
 
       <div className="overflow-hidden border-y border-border bg-secondary py-3 text-secondary-foreground">
-        <div className="flex w-max animate-marquee gap-10 text-sm font-semibold uppercase tracking-widest">
+        <div className="flex w-max animate-marquee gap-10 text-sm font-semibold uppercase tracking-widest" style={{ willChange: "transform" }}>
           <span>Free Shipping • New Arrivals • Best Sellers • Clean Glow Picks • Free Returns • Secure Payment • </span>
           <span>Free Shipping • New Arrivals • Best Sellers • Clean Glow Picks • Free Returns • Secure Payment • </span>
         </div>

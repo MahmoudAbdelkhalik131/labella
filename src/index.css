@@ -109,8 +109,9 @@
 }
 
 @layer components {
-  .glass-panel { @apply border border-border/70 bg-glass/80 shadow-warm backdrop-blur-xl; }
+  .glass-panel { @apply border border-border/70 bg-glass/80 shadow-warm backdrop-blur-sm transition-transform duration-300; will-change: transform; transform: translateZ(0); backface-visibility: hidden; }
   .section-shell { @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8; }
+  .perf-optimized { contain: content; }
   .link-focus { @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background; }
   .shimmer { background: linear-gradient(100deg, hsl(var(--muted)) 8%, hsl(var(--background)) 18%, hsl(var(--muted)) 33%); background-size: 200% 100%; animation: shimmer 1.4s linear infinite; }
 }

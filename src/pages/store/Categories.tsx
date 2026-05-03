@@ -64,7 +64,7 @@ export default function Categories() {
             {subs.data?.data?.map((s) => (
               <Link 
                 key={s._id} 
-                to={`/shop?subcategory=${s._id}`} 
+                to={`/shop?category=${active}&subcategory=${s._id}`} 
                 className="rounded-full bg-secondary px-6 py-3 font-semibold text-secondary-foreground transition-all hover:bg-secondary/80 hover:shadow-md"
               >
                 {s.name}

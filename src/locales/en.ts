@@ -33,6 +33,7 @@ export const en = {
     title: "All Beauty Essentials",
     filters: "Filters",
     category: "Category",
+    subcategory: "Subcategory",
     max_price: "Max price",
     min_rating: "Rating",
     any: "Any",
