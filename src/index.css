@@ -102,8 +102,8 @@
 
 @layer base {
   * { @apply border-border; }
-  html { scroll-behavior: smooth; }
-  body { @apply bg-background text-foreground font-body antialiased; background-image: var(--gradient-hero); }
+  html { scroll-behavior: smooth; overflow-x: hidden; }
+  body { @apply bg-background text-foreground font-body antialiased; background-image: var(--gradient-hero); overflow-x: hidden; width: 100%; position: relative; }
   h1, h2, h3, h4 { @apply font-display; letter-spacing: 0; }
   img { @apply select-none; }
 }
@@ -114,4 +114,6 @@
   .perf-optimized { contain: content; }
   .link-focus { @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background; }
   .shimmer { background: linear-gradient(100deg, hsl(var(--muted)) 8%, hsl(var(--background)) 18%, hsl(var(--muted)) 33%); background-size: 200% 100%; animation: shimmer 1.4s linear infinite; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
 }

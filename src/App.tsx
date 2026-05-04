@@ -23,6 +23,7 @@ import { TranslationProvider } from "./locales/TranslationContext";
 import AdminDashboard from "./pages/admin/Dashboard";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import ScrollToTop from "./components/ScrollToTop";
+import { ThemeProvider } from "next-themes";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -34,7 +35,8 @@ const queryClient = new QueryClient({
 });
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
+  <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+    <QueryClientProvider client={queryClient}>
     <TranslationProvider>
       <TooltipProvider>
         <Toaster />
@@ -71,6 +73,7 @@ const App = () => (
       </TooltipProvider>
     </TranslationProvider>
   </QueryClientProvider>
+  </ThemeProvider>
 );
 
 export default App;

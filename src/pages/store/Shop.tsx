@@ -9,6 +9,8 @@ import { ProductCard } from "@/components/storefront/ProductCard";
 import { ProductSkeletonGrid, QuickView, SectionTitle } from "@/components/storefront/StoreUi";
 import { useTranslation } from "@/locales/TranslationContext";
 import { cn } from "@/lib/utils";
+import { ScrollReveal } from "@/components/ScrollReveal";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface FilterProps {
   t: any;
@@ -185,13 +187,15 @@ export default function Shop() {
 
       <div className="grid gap-6 lg:grid-cols-[260px_1fr]">
         {/* Desktop Sidebar */}
-        <aside className="hidden h-fit rounded-3xl glass-panel p-6 lg:block">
-          <h3 className="mb-6 flex items-center gap-2 font-bold text-secondary text-xl">
-            <SlidersHorizontal className="h-5 w-5" />
-            {t.shop.filters}
-          </h3>
-          <FiltersContent {...sharedFilterProps} />
-        </aside>
+        <ScrollReveal direction="right" className="hidden lg:block">
+          <aside className="h-fit rounded-3xl glass-panel p-6 border border-white/5">
+            <h3 className="mb-6 flex items-center gap-2 font-bold text-secondary text-xl">
+              <SlidersHorizontal className="h-5 w-5" />
+              {t.shop.filters}
+            </h3>
+            <FiltersContent {...sharedFilterProps} />
+          </aside>
+        </ScrollReveal>
 
         {/* Mobile Filter Drawer */}
         {showFilters && (
@@ -214,20 +218,38 @@ export default function Shop() {
           </div>
         )}
 
-        <div>
+        <div className="space-y-6">
           {products.isLoading ? (
             <ProductSkeletonGrid count={12} />
           ) : filtered.length === 0 ? (
-            <div className="rounded-[3rem] border-2 border-dashed border-border py-20 text-center">
-              <p className="text-muted-foreground">{isAr ? "لا توجد منتجات مطابقة." : "No matching products found."}</p>
-              <Button variant="ghost" className="mt-4" onClick={() => setParams({})}>
-                {isAr ? "إعادة تعيين" : "Reset Filters"}
-              </Button>
-            </div>
+            <ScrollReveal>
+              <div className="rounded-[3rem] border-2 border-dashed border-border py-20 text-center bg-muted/5">
+                <p className="text-muted-foreground">{isAr ? "لا توجد منتجات مطابقة." : "No matching products found."}</p>
+                <Button variant="ghost" className="mt-4" onClick={() => setParams({})}>
+                  {isAr ? "إعادة تعيين" : "Reset Filters"}
+                </Button>
+              </div>
+            </ScrollReveal>
           ) : (
-            <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
-              {filtered.map(p => <ProductCard key={p._id} product={p} onQuickView={setQuick}/>)}
-            </div>
+            <motion.div 
+              layout
+              className="grid grid-cols-2 gap-4 xl:grid-cols-4"
+            >
+              <AnimatePresence mode="popLayout">
+                {filtered.map((p, i) => (
+                  <motion.div
+                    key={p._id}
+                    layout
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 0.3, delay: i * 0.05 }}
+                  >
+                    <ProductCard product={p} onQuickView={setQuick}/>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </motion.div>
           )}
 
           <div className="mt-12 flex justify-center gap-2">
