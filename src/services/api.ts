@@ -99,9 +99,6 @@ export const api = {
       headers: { Authorization: `Bearer ${resetToken}` },
       body: JSON.stringify(body),
     }),
-  google: () => {
-    window.location.href = `${API_BASE}/auth/google`;
-  },
   get: <T>(path: string) => apiFetch<T>(path),
   post: <T>(path: string, body?: unknown) =>
     apiFetch<T>(path, { method: "POST", body: serializeBody(body) }),

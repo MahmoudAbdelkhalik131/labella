@@ -22,7 +22,7 @@ export const ProductCard = memo(({ product, onQuickView }: { product: Product; o
       viewport={{ once: true }}
       whileHover={{ y: -8 }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      className="group relative overflow-hidden rounded-2xl glass-panel hover:shadow-glow-lg border border-white/5 backdrop-blur-md"
+      className="group relative overflow-hidden rounded-2xl glass-panel hover:shadow-glow-lg border border-white/5"
     >
       <Link to={`/products/${product._id}`} className="block overflow-hidden bg-muted/30 aspect-[4/5]">
         <motion.img 

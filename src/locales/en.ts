@@ -118,7 +118,6 @@ export const en = {
     send_code: "Send code",
     verify: "Verify code",
     reset_btn: "Reset password",
-    google: "Continue with Google",
     hero_title: "Beauty starts with confidence",
     hero_desc: "Sign in to track orders, save favorites, and enjoy a personalized shopping experience.",
     placeholder: {

@@ -34,6 +34,8 @@ const queryClient = new QueryClient({
   },
 });
 
+import { SmoothScroll } from "./components/SmoothScroll";
+
 const App = () => (
   <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
     <QueryClientProvider client={queryClient}>
@@ -45,28 +47,30 @@ const App = () => (
           <ScrollToTop />
           <AuthProvider>
             <ShopProvider>
-              <Routes>
-                <Route element={<Layout />}>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/shop" element={<Shop />} />
-                  <Route path="/categories" element={<Categories />} />
-                  <Route path="/products/:id" element={<ProductDetail />} />
-                  <Route path="/cart" element={<Cart />} />
-                  <Route path="/checkout" element={<Checkout />} />
-                  <Route path="/wishlist" element={<Wishlist />} />
-                  <Route path="/profile" element={<Profile />} />
-                  <Route path="/orders/:id" element={<OrderDetails />} />
-                  <Route path="/search" element={<SearchPage />} />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/auth/:mode" element={<Auth />} />
-                  
-                  {/* Admin Routes */}
-                  <Route element={<ProtectedRoute allowedRoles={["admin", "employee"]} />}>
-                    <Route path="/admin" element={<AdminDashboard />} />
+              <SmoothScroll>
+                <Routes>
+                  <Route element={<Layout />}>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/shop" element={<Shop />} />
+                    <Route path="/categories" element={<Categories />} />
+                    <Route path="/products/:id" element={<ProductDetail />} />
+                    <Route path="/cart" element={<Cart />} />
+                    <Route path="/checkout" element={<Checkout />} />
+                    <Route path="/wishlist" element={<Wishlist />} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/orders/:id" element={<OrderDetails />} />
+                    <Route path="/search" element={<SearchPage />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/auth/:mode" element={<Auth />} />
+                    
+                    {/* Admin Routes */}
+                    <Route element={<ProtectedRoute allowedRoles={["admin", "employee"]} />}>
+                      <Route path="/admin" element={<AdminDashboard />} />
+                    </Route>
                   </Route>
-                </Route>
-                <Route path="*" element={<NotFound />} />
-              </Routes>
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </SmoothScroll>
             </ShopProvider>
           </AuthProvider>
         </BrowserRouter>

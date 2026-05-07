@@ -81,7 +81,7 @@ export default function Home() {
         </div>
       </div>
 
-      <ScrollReveal>
+      <ScrollReveal className="perf-optimized">
         <section className="section-shell py-16">
           <SectionTitle eyebrow="Browse" title={t.nav.categories} />
           <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
@@ -108,7 +108,7 @@ export default function Home() {
         </section>
       </ScrollReveal>
 
-      <ScrollReveal>
+      <ScrollReveal className="perf-optimized">
         <section className="section-shell py-10">
           <SectionTitle eyebrow="Loved now" title={t.home.trending}>
             <Button asChild variant="glass">
@@ -127,7 +127,7 @@ export default function Home() {
         </section>
       </ScrollReveal>
 
-      <ScrollReveal>
+      <ScrollReveal className="perf-optimized">
         <section className="section-shell py-10">
           <SectionTitle eyebrow="Fresh drops" title={t.home.new_arrivals} />
           {arrivals.isLoading ? (
@@ -142,7 +142,7 @@ export default function Home() {
         </section>
       </ScrollReveal>
 
-      <ScrollReveal>
+      <ScrollReveal className="perf-optimized">
         <section className="section-shell py-12">
           <div className="rounded-[2rem] bg-plum p-8 text-secondary-foreground shadow-glow md:p-12 border border-white/10 relative overflow-hidden group">
             <motion.div 

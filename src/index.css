@@ -6,112 +6,142 @@
 
 @layer base {
   :root {
-    --background: 35 100% 98%;
-    --foreground: 0 0% 18%;
+    /* Feminine & Warm Light Palette - Softened from Pure White */
+    --background: 350 50% 96%;     /* Creamy Blush Petal */
+    --foreground: 325 25% 18%;     /* Deep Mauve Charcoal */
 
-    --card: 34 100% 96%;
-    --card-foreground: 0 0% 18%;
+    --card: 350 50% 94%;
+    --card-foreground: 325 25% 18%;
 
-    --popover: 34 100% 97%;
-    --popover-foreground: 0 0% 18%;
+    --popover: 350 50% 96%;
+    --popover-foreground: 325 25% 18%;
 
-    --primary: 331 55% 77%;
-    --primary-foreground: 323 31% 20%;
+    --primary: 340 60% 80%;        /* Dusty Rose */
+    --primary-foreground: 325 35% 22%;
 
-    --secondary: 318 31% 36%;
-    --secondary-foreground: 35 100% 98%;
+    --secondary: 325 25% 42%;      /* Mauve */
+    --secondary-foreground: 350 50% 96%;
 
-    --muted: 32 58% 91%;
-    --muted-foreground: 322 15% 40%;
+    --muted: 345 35% 92%;          /* Warm Mist Rose */
+    --muted-foreground: 325 15% 42%;
 
-    --accent: 31 52% 64%;
-    --accent-foreground: 323 31% 20%;
+    --accent: 38 40% 82%;          /* Warm Champagne Gold */
+    --accent-foreground: 325 35% 22%;
 
-    --destructive: 352 66% 48%;
-    --destructive-foreground: 35 100% 98%;
+    --destructive: 0 70% 60%;
+    --destructive-foreground: 350 50% 96%;
 
-    --border: 329 42% 86%;
-    --input: 329 42% 88%;
-    --ring: 318 31% 36%;
+    --border: 340 35% 88%;
+    --input: 340 35% 88%;
+    --ring: 340 60% 80%;
 
-    --radius: 1rem;
+    --radius: 1.25rem;
 
-    --cream: 39 100% 95%;
-    --soft: 36 100% 98%;
-    --plum: 318 31% 36%;
-    --rose: 331 55% 77%;
-    --gold: 31 52% 64%;
-    --glass: 35 100% 98% / 0.72;
-    --gradient-hero: linear-gradient(115deg, hsl(var(--soft)) 0%, hsl(var(--cream)) 34%, hsl(var(--primary) / 0.45) 100%);
-    --gradient-blush: linear-gradient(135deg, hsl(var(--primary) / 0.92), hsl(var(--cream)) 52%, hsl(var(--accent) / 0.72));
-    --gradient-plum: linear-gradient(135deg, hsl(var(--secondary)), hsl(var(--primary)));
-    --shadow-warm: 0 18px 55px -22px hsl(var(--secondary) / 0.38);
-    --shadow-glow: 0 16px 48px -20px hsl(var(--primary) / 0.72);
+    --cream: 350 45% 93%;
+    --soft: 350 50% 96%;
+    --plum: 325 25% 38%;
+    --rose: 340 65% 80%;
+    --gold: 38 40% 72%;
+    --glass: 350 50% 96% / 0.65;
+    --gradient-hero: linear-gradient(115deg, #fff5f5 0%, #ffeef2 34%, rgba(255, 182, 193, 0.25) 100%);
+    --gradient-blush: linear-gradient(135deg, hsl(var(--primary) / 0.8), #fffafb, hsl(var(--accent) / 0.6));
+    --gradient-plum: linear-gradient(135deg, #7d5a6b, #e8a0b5);
+    --shadow-warm: 0 20px 40px -15px rgba(125, 90, 107, 0.18);
+    --shadow-glow: 0 15px 35px -10px rgba(232, 160, 181, 0.45);
 
-    --sidebar-background: 34 100% 97%;
-    --sidebar-foreground: 0 0% 18%;
-    --sidebar-primary: 318 31% 36%;
-    --sidebar-primary-foreground: 35 100% 98%;
-    --sidebar-accent: 32 58% 91%;
-    --sidebar-accent-foreground: 318 31% 36%;
-    --sidebar-border: 329 42% 86%;
-    --sidebar-ring: 318 31% 36%;
+    --sidebar-background: 350 50% 96%;
+    --sidebar-foreground: 325 25% 18%;
+    --sidebar-primary: 340 60% 80%;
+    --sidebar-primary-foreground: 350 50% 96%;
+    --sidebar-accent: 345 35% 92%;
+    --sidebar-accent-foreground: 325 25% 42%;
+    --sidebar-border: 340 35% 88%;
+    --sidebar-ring: 340 60% 80%;
   }
 
   .dark {
-    --background: 323 31% 12%;
-    --foreground: 35 100% 96%;
-    --card: 323 27% 16%;
-    --card-foreground: 35 100% 96%;
-    --popover: 323 27% 16%;
-    --popover-foreground: 35 100% 96%;
-    --primary: 331 55% 77%;
-    --primary-foreground: 323 31% 12%;
-    --secondary: 31 52% 64%;
-    --secondary-foreground: 323 31% 12%;
-    --muted: 323 22% 22%;
-    --muted-foreground: 33 39% 78%;
-    --accent: 31 52% 64%;
-    --accent-foreground: 323 31% 12%;
-    --destructive: 352 66% 52%;
-    --destructive-foreground: 35 100% 98%;
-    --border: 323 20% 25%;
-    --input: 323 20% 25%;
-    --ring: 331 55% 77%;
-    --cream: 323 22% 18%;
-    --soft: 323 31% 12%;
-    --plum: 331 55% 77%;
-    --rose: 331 55% 77%;
-    --gold: 31 52% 64%;
-    --glass: 323 27% 16% / 0.76;
-    --gradient-hero: linear-gradient(115deg, hsl(var(--background)) 0%, hsl(var(--cream)) 48%, hsl(var(--primary) / 0.22) 100%);
-    --gradient-blush: linear-gradient(135deg, hsl(var(--primary) / 0.42), hsl(var(--cream)), hsl(var(--accent) / 0.34));
-    --gradient-plum: linear-gradient(135deg, hsl(318 31% 26%), hsl(var(--primary) / 0.78));
-    --shadow-warm: 0 18px 55px -22px hsl(0 0% 0% / 0.7);
-    --shadow-glow: 0 16px 48px -20px hsl(var(--primary) / 0.5);
-    --sidebar-background: 323 27% 16%;
-    --sidebar-foreground: 35 100% 96%;
-    --sidebar-primary: 331 55% 77%;
-    --sidebar-primary-foreground: 323 31% 12%;
-    --sidebar-accent: 323 22% 22%;
-    --sidebar-accent-foreground: 35 100% 96%;
-    --sidebar-border: 323 20% 25%;
-    --sidebar-ring: 331 55% 77%;
+    /* Feminine & Luxurious Dark Palette - Deep Plum with Gold Text */
+    --background: 325 25% 8%;       /* Deeper Velvet Plum */
+    --foreground: 38 50% 85%;      /* Radiant Champagne Gold Text */
+    
+    --card: 325 25% 11%;
+    --card-foreground: 38 50% 85%;
+    
+    --popover: 325 25% 11%;
+    --popover-foreground: 38 50% 85%;
+    
+    --primary: 340 65% 85%;        /* Luminous Rose */
+    --primary-foreground: 325 25% 8%;
+    
+    --secondary: 38 45% 75%;       /* Elegant Gold */
+    --secondary-foreground: 325 25% 8%;
+    
+    --muted: 325 20% 16%;
+    --muted-foreground: 38 30% 70%;
+    
+    --accent: 38 50% 85%;          /* Gold */
+    --accent-foreground: 325 25% 8%;
+    
+    --destructive: 0 60% 50%;
+    --destructive-foreground: 340 40% 95%;
+    
+    --border: 325 15% 20%;
+    --input: 325 15% 20%;
+    --ring: 38 50% 85%;
+    
+    --cream: 325 20% 12%;
+    --soft: 325 25% 8%;
+    --plum: 340 65% 85%;
+    --rose: 340 65% 85%;
+    --gold: 38 50% 85%;
+    --glass: 325 25% 11% / 0.75;
+    --gradient-hero: linear-gradient(115deg, #1a1214 0%, #2d1b22 48%, rgba(212, 175, 55, 0.1) 100%);
+    --gradient-blush: linear-gradient(135deg, rgba(240, 177, 196, 0.3), #1a1214, rgba(212, 175, 55, 0.3));
+    --gradient-plum: linear-gradient(135deg, #4a343e, #f0b1c4);
+    --shadow-warm: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+    --shadow-glow: 0 15px 35px -10px rgba(212, 175, 55, 0.2);
+
+    --sidebar-background: 325 25% 11%;
+    --sidebar-foreground: 38 50% 85%;
+    --sidebar-primary: 38 50% 85%;
+    --sidebar-primary-foreground: 325 25% 8%;
+    --sidebar-accent: 325 20% 16%;
+    --sidebar-accent-foreground: 38 50% 85%;
+    --sidebar-border: 325 15% 20%;
+    --sidebar-ring: 38 50% 85%;
   }
 }
 
 @layer base {
   * { @apply border-border; }
-  html { scroll-behavior: smooth; overflow-x: hidden; }
-  body { @apply bg-background text-foreground font-body antialiased; background-image: var(--gradient-hero); overflow-x: hidden; width: 100%; position: relative; }
-  h1, h2, h3, h4 { @apply font-display; letter-spacing: 0; }
+  html { scroll-behavior: auto !important; overflow-x: hidden; }
+  body { 
+    @apply bg-background text-foreground font-body antialiased; 
+    background-image: var(--gradient-hero); 
+    overflow-x: hidden; 
+    width: 100%; 
+    position: relative;
+    text-rendering: optimizeSpeed;
+  }
+  h1, h2, h3, h4 { @apply font-display; letter-spacing: -0.02em; }
   img { @apply select-none; }
 }
 
 @layer components {
-  .glass-panel { @apply border border-border/70 bg-glass/80 shadow-warm backdrop-blur-sm transition-transform duration-300; will-change: transform; transform: translateZ(0); backface-visibility: hidden; }
+  .glass-panel { 
+    @apply border-none md:border border-border/70 bg-glass/80 shadow-warm;
+    backdrop-filter: blur(8px); /* Fixed value is often more performant than variables */
+    -webkit-backdrop-filter: blur(8px);
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease;
+    will-change: transform; 
+    transform: translateZ(0); 
+    backface-visibility: hidden; 
+  }
   .section-shell { @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8; }
-  .perf-optimized { contain: content; }
+  .perf-optimized { 
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 500px;
+  }
   .link-focus { @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background; }
   .shimmer { background: linear-gradient(100deg, hsl(var(--muted)) 8%, hsl(var(--background)) 18%, hsl(var(--muted)) 33%); background-size: 200% 100%; animation: shimmer 1.4s linear infinite; }
   .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
