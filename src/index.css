@@ -7,46 +7,46 @@
 @layer base {
   :root {
     /* Feminine & Warm Light Palette - Softened from Pure White */
-    --background: 350 50% 96%;     /* Creamy Blush Petal */
-    --foreground: 325 25% 18%;     /* Deep Mauve Charcoal */
+    --background: 350 50% 98%;     /* Lighter Creamy Blush */
+    --foreground: 330 55% 12%;     /* Very Dark Plum instead of charcoal */
 
-    --card: 350 50% 94%;
-    --card-foreground: 325 25% 18%;
+    --card: 350 50% 96%;
+    --card-foreground: 330 55% 12%;
 
-    --popover: 350 50% 96%;
-    --popover-foreground: 325 25% 18%;
+    --popover: 350 50% 98%;
+    --popover-foreground: 330 55% 12%;
 
     --primary: 340 60% 80%;        /* Dusty Rose */
-    --primary-foreground: 325 35% 22%;
+    --primary-foreground: 330 55% 20%;
 
-    --secondary: 325 25% 42%;      /* Mauve */
-    --secondary-foreground: 350 50% 96%;
+    --secondary: 330 55% 23%;      /* EXACT #5A1A3A for strong contrast */
+    --secondary-foreground: 350 50% 98%;
 
-    --muted: 345 35% 92%;          /* Warm Mist Rose */
-    --muted-foreground: 325 15% 42%;
+    --muted: 345 35% 94%;          /* Warm Mist Rose */
+    --muted-foreground: 330 20% 45%;
 
-    --accent: 38 40% 82%;          /* Warm Champagne Gold */
-    --accent-foreground: 325 35% 22%;
+    --accent: 38 50% 85%;          /* Consistent Champagne Gold */
+    --accent-foreground: 330 55% 12%;
 
     --destructive: 0 70% 60%;
-    --destructive-foreground: 350 50% 96%;
+    --destructive-foreground: 350 50% 98%;
 
-    --border: 340 35% 88%;
-    --input: 340 35% 88%;
-    --ring: 340 60% 80%;
+    --border: 340 30% 90%;
+    --input: 340 30% 90%;
+    --ring: 330 55% 23%;
 
     --radius: 1.25rem;
 
     --cream: 350 45% 93%;
     --soft: 350 50% 96%;
-    --plum: 325 25% 38%;
+    --plum: 330 55% 23%;           /* New Signature Deep Plum #5A1A3A */
     --rose: 340 65% 80%;
     --gold: 38 40% 72%;
     --glass: 350 50% 96% / 0.65;
-    --gradient-hero: linear-gradient(115deg, #fff5f5 0%, #ffeef2 34%, rgba(255, 182, 193, 0.25) 100%);
+    --gradient-hero: linear-gradient(115deg, #fff5f5 0%, #ffeef2 34%, rgba(90, 26, 58, 0.08) 100%);
     --gradient-blush: linear-gradient(135deg, hsl(var(--primary) / 0.8), #fffafb, hsl(var(--accent) / 0.6));
-    --gradient-plum: linear-gradient(135deg, #7d5a6b, #e8a0b5);
-    --shadow-warm: 0 20px 40px -15px rgba(125, 90, 107, 0.18);
+    --gradient-plum: linear-gradient(135deg, #5A1A3A, #e8a0b5);
+    --shadow-warm: 0 20px 40px -15px rgba(90, 26, 58, 0.18);
     --shadow-glow: 0 15px 35px -10px rgba(232, 160, 181, 0.45);
 
     --sidebar-background: 350 50% 96%;
@@ -60,55 +60,55 @@
   }
 
   .dark {
-    /* Feminine & Luxurious Dark Palette - Deep Plum with Gold Text */
-    --background: 325 25% 8%;       /* Deeper Velvet Plum */
-    --foreground: 38 50% 85%;      /* Radiant Champagne Gold Text */
+    /* Feminine & Luxurious Dark Palette - Deep Plum (#5A1A3A) with Gold Text */
+    --background: 330 55% 8%;       /* Deeper version of #5A1A3A */
+    --foreground: 38 70% 88%;      /* Brighter, More Radiant Gold for Contrast */
     
-    --card: 325 25% 11%;
-    --card-foreground: 38 50% 85%;
+    --card: 330 55% 12%;           /* Subtle lift from background */
+    --card-foreground: 38 70% 88%;
     
-    --popover: 325 25% 11%;
-    --popover-foreground: 38 50% 85%;
+    --popover: 330 55% 12%;
+    --popover-foreground: 38 70% 88%;
     
-    --primary: 340 65% 85%;        /* Luminous Rose */
-    --primary-foreground: 325 25% 8%;
+    --primary: 330 55% 45%;        /* Vibrant Plum derivative of #5A1A3A */
+    --primary-foreground: 330 55% 8%;
     
-    --secondary: 38 45% 75%;       /* Elegant Gold */
-    --secondary-foreground: 325 25% 8%;
+    --secondary: 38 60% 70%;       /* Richer Gold */
+    --secondary-foreground: 330 55% 8%;
     
-    --muted: 325 20% 16%;
-    --muted-foreground: 38 30% 70%;
+    --muted: 330 40% 16%;
+    --muted-foreground: 38 40% 65%;
     
-    --accent: 38 50% 85%;          /* Gold */
-    --accent-foreground: 325 25% 8%;
+    --accent: 330 55% 23%;          /* EXACT #5A1A3A */
+    --accent-foreground: 38 70% 90%;
     
     --destructive: 0 60% 50%;
     --destructive-foreground: 340 40% 95%;
     
-    --border: 325 15% 20%;
-    --input: 325 15% 20%;
-    --ring: 38 50% 85%;
+    --border: 330 30% 22%;
+    --input: 330 30% 22%;
+    --ring: 38 70% 88%;
     
-    --cream: 325 20% 12%;
-    --soft: 325 25% 8%;
-    --plum: 340 65% 85%;
-    --rose: 340 65% 85%;
-    --gold: 38 50% 85%;
-    --glass: 325 25% 11% / 0.75;
-    --gradient-hero: linear-gradient(115deg, #1a1214 0%, #2d1b22 48%, rgba(212, 175, 55, 0.1) 100%);
-    --gradient-blush: linear-gradient(135deg, rgba(240, 177, 196, 0.3), #1a1214, rgba(212, 175, 55, 0.3));
-    --gradient-plum: linear-gradient(135deg, #4a343e, #f0b1c4);
-    --shadow-warm: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
-    --shadow-glow: 0 15px 35px -10px rgba(212, 175, 55, 0.2);
+    --cream: 330 40% 14%;
+    --soft: 330 55% 8%;
+    --plum: 330 55% 45%;
+    --rose: 330 55% 45%;
+    --gold: 38 70% 88%;
+    --glass: 330 55% 12% / 0.75;
+    --gradient-hero: linear-gradient(115deg, #15060d 0%, #5A1A3A 48%, rgba(212, 175, 55, 0.15) 100%);
+    --gradient-blush: linear-gradient(135deg, rgba(90, 26, 58, 0.4), #15060d, rgba(212, 175, 55, 0.4));
+    --gradient-plum: linear-gradient(135deg, #5A1A3A, #f0b1c4);
+    --shadow-warm: 0 20px 40px -15px rgba(0, 0, 0, 0.85);
+    --shadow-glow: 0 15px 35px -10px rgba(90, 26, 58, 0.6);
 
-    --sidebar-background: 325 25% 11%;
-    --sidebar-foreground: 38 50% 85%;
-    --sidebar-primary: 38 50% 85%;
-    --sidebar-primary-foreground: 325 25% 8%;
-    --sidebar-accent: 325 20% 16%;
-    --sidebar-accent-foreground: 38 50% 85%;
-    --sidebar-border: 325 15% 20%;
-    --sidebar-ring: 38 50% 85%;
+    --sidebar-background: 330 55% 12%;
+    --sidebar-foreground: 38 70% 88%;
+    --sidebar-primary: 38 70% 88%;
+    --sidebar-primary-foreground: 330 55% 8%;
+    --sidebar-accent: 330 40% 16%;
+    --sidebar-accent-foreground: 38 70% 88%;
+    --sidebar-border: 330 30% 22%;
+    --sidebar-ring: 38 70% 88%;
   }
 }
 
