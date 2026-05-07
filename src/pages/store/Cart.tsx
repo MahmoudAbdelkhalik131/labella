@@ -33,8 +33,12 @@ export default function Cart() {
         const items = old.data.items.map((i: any) => 
           i.product._id === productId ? { ...i, quantity } : i
         );
-        const totelPrice = items.reduce((sum: number, i: any) => sum + (i.price * i.quantity), 0);
-        return { ...old, data: { ...old.data, items, totelPrice } };
+        const totelPrice = items.reduce((sum: number, i: any) => {
+          const lineTotal = sum + (i.price * i.quantity);
+          return parseFloat(lineTotal.toFixed(2));
+        }, 0);
+        const taxPrice = parseFloat((totelPrice * 0.07).toFixed(2));
+        return { ...old, data: { ...old.data, items, totelPrice, taxPrice } };
       });
 
       return { previousCart };
@@ -62,8 +66,12 @@ export default function Cart() {
       queryClient.setQueryData<{ data: CartType }>(["cart"], (old) => {
         if (!old?.data?.items) return old;
         const items = old.data.items.filter((i: any) => i.product._id !== productId);
-        const totelPrice = items.reduce((sum: number, i: any) => sum + (i.price * i.quantity), 0);
-        return { ...old, data: { ...old.data, items, totelPrice } };
+        const totelPrice = items.reduce((sum: number, i: any) => {
+          const lineTotal = sum + (i.price * i.quantity);
+          return parseFloat(lineTotal.toFixed(2));
+        }, 0);
+        const taxPrice = parseFloat((totelPrice * 0.07).toFixed(2));
+        return { ...old, data: { ...old.data, items, totelPrice, taxPrice } };
       });
 
       toast("Removed from cart");
@@ -121,9 +129,29 @@ export default function Cart() {
                 <h3 className="font-bold text-secondary">{i.product.name}</h3>
                 <p className="text-muted-foreground">{money(i.price)} {t.cart.each}</p>
                 <div className="mt-3 flex items-center gap-2">
-                  <Button variant="glass" size="sm" onClick={() => updateMutation.mutate({ productId: i.product._id, quantity: Math.max(1, i.quantity - 1) })}>-</Button>
-                  <span>{i.quantity}</span>
-                  <Button variant="glass" size="sm" onClick={() => updateMutation.mutate({ productId: i.product._id, quantity: i.quantity + 1 })}>+</Button>
+                  <Button 
+                    variant="glass" 
+                    size="sm" 
+                    onClick={() => updateMutation.mutate({ productId: i.product._id, quantity: Math.max(1, i.quantity - 1) })}
+                  >
+                    -
+                  </Button>
+                  <span className="w-8 text-center font-bold">{i.quantity}</span>
+                  <Button 
+                    variant="glass" 
+                    size="sm" 
+                    disabled={i.quantity >= (i.product.quantity || 0)}
+                    onClick={() => {
+                      const stock = i.product.quantity || 0;
+                      if (i.quantity >= stock) {
+                        toast.error(`Only ${stock} items available in stock`);
+                        return;
+                      }
+                      updateMutation.mutate({ productId: i.product._id, quantity: i.quantity + 1 });
+                    }}
+                  >
+                    +
+                  </Button>
                 </div>
               </div>
               <div className="flex items-center gap-3">
