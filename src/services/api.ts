@@ -64,7 +64,9 @@ export const api = {
   imgUrl: (path: string | undefined, fallback = "/placeholder.svg") => {
     if (!path) return fallback;
     if (path.startsWith("http")) return path;
-    const type = path.startsWith("category-") ? "categories" : "products";
+    let type = "products";
+    if (path.startsWith("category-")) type = "categories";
+    if (path.startsWith("subcategory-")) type = "subcategories";
     return `${API_BASE}/images/${type}/${path}`;
   },
   userImg: (path: string | undefined) => {

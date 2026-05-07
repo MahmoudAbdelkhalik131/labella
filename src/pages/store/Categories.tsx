@@ -60,14 +60,23 @@ export default function Categories() {
             </button>
           </div>
           
-          <div className="flex flex-wrap gap-4">
+          <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {subs.data?.data?.map((s) => (
               <Link 
                 key={s._id} 
                 to={`/shop?category=${active}&subcategory=${s._id}`} 
-                className="rounded-full bg-secondary px-6 py-3 font-semibold text-secondary-foreground transition-all hover:bg-secondary/80 hover:shadow-md"
+                className="group flex flex-col overflow-hidden rounded-2xl bg-muted/20 transition-all hover:-translate-y-1 hover:shadow-md"
               >
-                {s.name}
+                <div className="overflow-hidden bg-muted aspect-[4/3]">
+                  <img 
+                    src={api.imgUrl(s.image)} 
+                    alt={s.name} 
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                  />
+                </div>
+                <div className="p-4 text-center font-bold text-secondary">
+                  {s.name}
+                </div>
               </Link>
             ))}
             {subs.data?.data?.length === 0 && (

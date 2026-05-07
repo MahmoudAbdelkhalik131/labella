@@ -39,6 +39,7 @@ export default function AdminDashboard() {
   const [categoryForm, setCategoryForm] = useState({ name: "" });
   const [categoryImage, setCategoryImage] = useState<File | null>(null);
   const [subcategoryForm, setSubcategoryForm] = useState({ name: "", category: "" });
+  const [subcategoryImage, setSubcategoryImage] = useState<File | null>(null);
 
   // Queries
   const products = useQuery({ queryKey: ["admin-products"], queryFn: () => api.get<any>("/products") });
@@ -134,10 +135,6 @@ export default function AdminDashboard() {
       toast.error(isAr ? "يرجى إكمال كل الحقول المطلوبة." : "Please complete all required fields.");
       return;
     }
-    if (editingProduct) {
-      saveProduct.mutate(productForm);
-      return;
-    }
 
     const formData = new FormData();
     formData.append("name", productForm.name);
@@ -146,8 +143,12 @@ export default function AdminDashboard() {
     formData.append("quantity", String(productForm.quantity));
     formData.append("category", productForm.category);
     formData.append("subcategory", productForm.subcategory);
+    
     if (productCover) formData.append("cover", productCover);
     productImages.forEach((image) => formData.append("images", image));
+
+    // If we're editing and NO new images are selected, we can send just the JSON or use FormData without images
+    // The backend updateOne usually handles both.
     saveProduct.mutate(formData);
   };
 
@@ -169,14 +170,13 @@ export default function AdminDashboard() {
       return;
     }
     
+    const formData = new FormData();
+    formData.append("name", categoryForm.name);
     if (categoryImage) {
-      const formData = new FormData();
-      formData.append("name", categoryForm.name);
       formData.append("image", categoryImage);
-      saveCategory.mutate(formData);
-    } else {
-      saveCategory.mutate(categoryForm);
     }
+    
+    saveCategory.mutate(formData);
   };
 
   const openSubcategoryModal = (s?: any) => {
@@ -187,7 +187,24 @@ export default function AdminDashboard() {
       setEditingSubcategory(null);
       setSubcategoryForm({ name: "", category: "" });
     }
+    setSubcategoryImage(null);
     setIsSubcategoryModalOpen(true);
+  };
+
+  const submitSubcategory = () => {
+    if (!subcategoryForm.name || !subcategoryForm.category) {
+      toast.error(isAr ? "يرجى إكمال كل الحقول المطلوبة." : "Please complete all required fields.");
+      return;
+    }
+    
+    const formData = new FormData();
+    formData.append("name", subcategoryForm.name);
+    formData.append("category", subcategoryForm.category);
+    if (subcategoryImage) {
+      formData.append("image", subcategoryImage);
+    }
+    
+    saveSubcategory.mutate(formData);
   };
 
   return (
@@ -281,8 +298,17 @@ export default function AdminDashboard() {
                         id="cover"
                         type="file"
                         accept="image/*"
-                        disabled={!!editingProduct}
                         onChange={(e) => setProductCover(e.target.files?.[0] || null)}
+                      />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="images">{isAr ? "صور إضافية" : "Additional images"}</Label>
+                      <Input
+                        id="images"
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        onChange={(e) => setProductImages(Array.from(e.target.files || []))}
                       />
                     </div>
                   </div>
@@ -306,7 +332,7 @@ export default function AdminDashboard() {
                     <TableRow key={p._id} className="hover:bg-muted/20 transition-colors">
                       <TableCell className="px-6">
                         <div className="flex items-center gap-3">
-                          <img src={p.cover || "/placeholder.svg"} className="h-10 w-10 rounded-lg object-cover" />
+                          <img src={api.imgUrl(p.cover)} className="h-10 w-10 rounded-lg object-cover" />
                           <span className="font-semibold text-secondary text-sm">{p.name}</span>
                         </div>
                       </TableCell>
@@ -464,6 +490,15 @@ export default function AdminDashboard() {
                       <Label htmlFor="cat-name">{isAr ? "اسم الفئة" : "Category Name"}</Label>
                       <Input id="cat-name" value={categoryForm.name} onChange={(e) => setCategoryForm({name: e.target.value})} />
                     </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="cat-image">{isAr ? "صورة الفئة" : "Category Image"}</Label>
+                      <Input
+                        id="cat-image"
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => setCategoryImage(e.target.files?.[0] || null)}
+                      />
+                    </div>
                   </div>
                   <Button className="w-full" onClick={submitCategory}>{isAr ? "حفظ" : "Save Category"}</Button>
                 </DialogContent>
@@ -523,8 +558,30 @@ export default function AdminDashboard() {
                       <Label htmlFor="sub-name">{isAr ? "الاسم" : "Name"}</Label>
                       <Input id="sub-name" value={subcategoryForm.name} onChange={(e) => setSubcategoryForm({...subcategoryForm, name: e.target.value})} />
                     </div>
+                    <div className="grid gap-2">
+                      <Label>{isAr ? "الفئة الرئيسية" : "Parent Category"}</Label>
+                      <Select value={subcategoryForm.category} onValueChange={(v) => setSubcategoryForm({...subcategoryForm, category: v})}>
+                        <SelectTrigger>
+                          <SelectValue placeholder={isAr ? "اختر فئة" : "Select category"} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {categories.data?.data?.map((c: any) => (
+                            <SelectItem key={c._id} value={c._id}>{c.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="sub-image">{isAr ? "صورة الفئة الفرعية" : "Subcategory Image"}</Label>
+                      <Input
+                        id="sub-image"
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => setSubcategoryImage(e.target.files?.[0] || null)}
+                      />
+                    </div>
                   </div>
-                  <Button className="w-full" onClick={() => saveSubcategory.mutate(subcategoryForm)}>{isAr ? "حفظ" : "Save Subcategory"}</Button>
+                  <Button className="w-full" onClick={submitSubcategory}>{isAr ? "حفظ" : "Save Subcategory"}</Button>
                 </DialogContent>
               </Dialog>
             </CardHeader>
@@ -540,7 +597,12 @@ export default function AdminDashboard() {
                 <TableBody>
                   {subcategories.data?.data?.map((s: any) => (
                     <TableRow key={s._id} className="hover:bg-muted/20 transition-colors">
-                      <TableCell className="px-6 font-semibold text-secondary text-sm">{s.name}</TableCell>
+                      <TableCell className="px-6 font-semibold text-secondary text-sm">
+                        <div className="flex items-center gap-3">
+                          <img src={api.imgUrl(s.image)} className="h-8 w-8 rounded object-cover" />
+                          {s.name}
+                        </div>
+                      </TableCell>
                       <TableCell>
                         <Badge variant="outline" className="text-xs">{typeof s.category === 'string' ? s.category : s.category?.name || "None"}</Badge>
                       </TableCell>
