@@ -1,21 +1,26 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import { ShieldCheck, RotateCcw, LockKeyhole, ArrowRight } from "lucide-react";
+import { ShieldCheck, RotateCcw, LockKeyhole, ArrowRight, Play } from "lucide-react";
 import hero from "@/assets/make-it-real-hero.jpg";
+import heroVideo from "@/assets/d_c_e_d_a_fba_c_c_mp_.mp4";
 import { api } from "@/services/api";
 import type { ApiList, Category, Product } from "@/services/types";
 import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/storefront/ProductCard";
 import { EmptyState, ProductSkeletonGrid, QuickView, SectionTitle } from "@/components/storefront/StoreUi";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "@/locales/TranslationContext";
 import { ScrollReveal } from "@/components/ScrollReveal";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Home() {
   const { t, isAr } = useTranslation();
   const [quick, setQuick] = useState<Product | null>(null);
+  const heroVideoRef = useRef<HTMLVideoElement | null>(null);
+  const [isVideoFinished, setIsVideoFinished] = useState(false);
+  const stopAtSeconds = 8.0;
+
   const categories = useQuery({
     queryKey: ["categories"],
     queryFn: () => api.get<ApiList<Category>>("/categories"),
@@ -28,53 +33,107 @@ export default function Home() {
     queryKey: ["products", "arrivals"],
     queryFn: () => api.get<ApiList<Product>>("/products?sort=-createdAt&limit=4"),
   });
+  
   const sale = (arrivals.data?.data || []).filter(
     (p) => p.priceAfterDiscount && p.priceAfterDiscount < p.price
   );
 
+  const handleHeroTimeUpdate = () => {
+    const video = heroVideoRef.current;
+    if (!video) return;
+    
+    if (video.currentTime >= stopAtSeconds || video.ended) {
+      video.pause();
+      if (video.currentTime > stopAtSeconds) video.currentTime = stopAtSeconds;
+      setIsVideoFinished(true);
+    }
+  };
+
+  const handleReplay = () => {
+    const video = heroVideoRef.current;
+    if (video) {
+      video.currentTime = 0;
+      video.play();
+      setIsVideoFinished(false);
+    }
+  };
+
   return (
     <>
-      <section className="section-shell grid min-h-[calc(100vh-5rem)] items-center gap-8 py-8 lg:grid-cols-[0.9fr_1.1fr]">
-        <motion.div 
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="space-y-7"
-        >
-          <p className="font-semibold uppercase tracking-wider text-secondary">{t.home.hero_eyebrow}</p>
-          <h1 className={cn("text-5xl font-extrabold leading-tight text-secondary md:text-7xl", isAr && "font-arabic")}>
-            {t.home.hero_title}
-          </h1>
-          <p className="max-w-xl text-lg text-muted-foreground">{t.home.hero_desc}</p>
-          <div className="flex flex-wrap gap-3">
-            <Button asChild variant="hero" size="lg">
-              <Link to="/shop">
-                {t.home.shop_now} <ArrowRight />
-              </Link>
-            </Button>
-            <Button asChild variant="glass" size="lg">
-              <Link to="/categories">{t.home.explore}</Link>
-            </Button>
-          </div>
-        </motion.div>
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9, x: 50 }}
-          animate={{ opacity: 1, scale: 1, x: 0 }}
-          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-          className="relative"
-        >
-          <div className="absolute -inset-4 rounded-[2rem] bg-blush opacity-70 blur-2xl" />
-          <img
-            src={hero}
-            alt="Labella cosmetics collection"
-            width={1600}
-            height={960}
-            className="relative aspect-[5/4] w-full rounded-[2rem] object-cover shadow-glow"
+      <section className="relative w-full h-[calc(100vh-11.25rem)] min-h-[790px] flex items-center overflow-hidden bg-secondary">
+        {/* Cinematic Video Background */}
+        <div className="absolute inset-0 z-0">
+          <video
+            ref={heroVideoRef}
+            src={heroVideo}
+            aria-label="Labella cosmetics collection"
+            className="h-full w-full object-cover"
+            muted
+            playsInline
+            autoPlay
+            preload="auto"
+            onTimeUpdate={handleHeroTimeUpdate}
+            onEnded={handleHeroTimeUpdate}
           />
-        </motion.div>
+          
+          {/* Overlays for depth and readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-secondary/80 via-secondary/40 to-transparent z-10" />
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={isVideoFinished ? { opacity: 0.3 } : { opacity: 0 }}
+            className="absolute inset-0 bg-black z-20 pointer-events-none"
+          />
+        </div>
+
+        {/* Content Reveal */}
+        <div className="section-shell relative z-30 w-full">
+          <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            animate={isVideoFinished ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
+            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+            className="max-w-2xl space-y-8"
+          >
+            <div className="space-y-4">
+              <p className="font-semibold uppercase tracking-widest text-accent/90">Beauty that feels like you</p>
+              <h1 className={cn("text-5xl font-extrabold leading-tight text-secondary-foreground md:text-8xl", isAr && "font-arabic")}>
+                Discover Your True Glow
+              </h1>
+              <p className="max-w-xl text-xl text-secondary-foreground/80 leading-relaxed">
+                Curated makeup, skin rituals, and glow essentials wrapped in a warm luxury shopping experience.
+              </p>
+            </div>
+            
+            <div className="flex flex-wrap gap-4">
+              <Button asChild variant="hero" size="lg" className="rounded-full px-10 h-14 text-lg shadow-glow">
+                <Link to="/shop">
+                  Shop Now <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
+              <Button asChild variant="glass" size="lg" className="rounded-full px-10 h-14 text-lg">
+                <Link to="/categories">Explore Categories</Link>
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Replay Button */}
+        <AnimatePresence>
+          {isVideoFinished && (
+            <motion.button
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              onClick={handleReplay}
+              className="absolute bottom-10 right-10 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-xl transition-all hover:bg-white/20 hover:scale-110 border border-white/20 shadow-2xl"
+              title="Replay Reveal"
+            >
+              <RotateCcw className="h-6 w-6" />
+            </motion.button>
+          )}
+        </AnimatePresence>
       </section>
 
-      <div className="overflow-hidden border-y border-border bg-secondary py-3 text-secondary-foreground">
+      <div className="overflow-hidden border-y border-border bg-background py-4 text-secondary">
         <div className="flex w-max animate-marquee gap-10 text-sm font-semibold uppercase tracking-widest" style={{ willChange: "transform" }}>
           <span>Free Shipping • New Arrivals • Best Sellers • Clean Glow Picks • Free Returns • Secure Payment • </span>
           <span>Free Shipping • New Arrivals • Best Sellers • Clean Glow Picks • Free Returns • Secure Payment • </span>
