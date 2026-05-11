@@ -17,7 +17,22 @@ export function Layout() { const { t, language, setLanguage }=useTranslation(); 
       <LayoutDashboard className="h-4 w-4" />
     </Link>
   </Button>
-)}<Button asChild variant="glass" size="icon"><Link to="/wishlist" aria-label="Wishlist"><Heart/><span className="absolute -right-1 -top-1 rounded-full bg-accent px-1.5 text-[10px] font-bold text-accent-foreground">{wishlistIds.size}</span></Link></Button><Button asChild variant="glass" size="icon" className={cn(cartPulse && "animate-cart")}><Link to="/cart" aria-label="Cart"><ShoppingBag/><span className="absolute -right-1 -top-1 rounded-full bg-secondary px-1.5 text-[10px] font-bold text-secondary-foreground">{cartCount}</span></Link></Button>{user && <Button variant="ghost" size="sm" onClick={logout} className="hidden md:flex text-muted-foreground hover:text-secondary font-semibold">{t.nav.logout}</Button>}<Button asChild variant="hero" size="sm"><Link to={user ? "/profile" : "/auth/login"}>{user ? user.name?.split(" ")[0] || t.nav.profile : t.nav.login}</Link></Button></div></header>{menu && <div className="fixed inset-0 z-50 bg-secondary/30 backdrop-blur-sm md:hidden"><aside className="h-full w-80 max-w-[86vw] bg-background p-5 shadow-warm"><div className="mb-8 flex items-center justify-between"><span className="font-script text-4xl text-secondary">Labella</span><Button variant="ghost" size="icon" onClick={()=>setMenu(false)}><X/></Button></div><nav className="grid gap-2">
+)}{!isAdminArea && (
+          <>
+            <Button asChild variant="glass" size="icon">
+              <Link to="/wishlist" aria-label="Wishlist">
+                <Heart />
+                <span className="absolute -right-1 -top-1 rounded-full bg-accent px-1.5 text-[10px] font-bold text-accent-foreground">{wishlistIds.size}</span>
+              </Link>
+            </Button>
+            <Button asChild variant="glass" size="icon" className={cn(cartPulse && "animate-cart")}>
+              <Link to="/cart" aria-label="Cart">
+                <ShoppingBag />
+                <span className="absolute -right-1 -top-1 rounded-full bg-secondary px-1.5 text-[10px] font-bold text-secondary-foreground">{cartCount}</span>
+              </Link>
+            </Button>
+          </>
+        )}{user && <Button variant="ghost" size="sm" onClick={logout} className="hidden md:flex text-muted-foreground hover:text-secondary font-semibold">{t.nav.logout}</Button>}<Button asChild variant="hero" size="sm"><Link to={user ? "/profile" : "/auth/login"}>{user ? user.name?.split(" ")[0] || t.nav.profile : t.nav.login}</Link></Button></div></header>{menu && <div className="fixed inset-0 z-50 bg-secondary/30 backdrop-blur-sm md:hidden"><aside className="h-full w-80 max-w-[86vw] bg-background p-5 shadow-warm"><div className="mb-8 flex items-center justify-between"><span className="font-script text-4xl text-secondary">Labella</span><Button variant="ghost" size="icon" onClick={()=>setMenu(false)}><X/></Button></div><nav className="grid gap-2">
               {nav.map(n=><Link key={n.to} to={n.to} onClick={()=>setMenu(false)} className="rounded-xl px-4 py-3 font-semibold hover:bg-primary/30">{n.label}</Link>)}
               {isAdminArea && <Link to="/admin" onClick={()=>setMenu(false)} className="rounded-xl px-4 py-3 font-semibold text-secondary hover:bg-primary/30">{language === "AR" ? "لوحة التحكم" : "Admin Dashboard"}</Link>}
               {user && <button onClick={logout} className="rounded-xl px-4 py-3 text-left font-semibold hover:bg-primary/30">{t.nav.logout}</button>}
@@ -43,7 +58,7 @@ export function Layout() { const { t, language, setLanguage }=useTranslation(); 
           ["/cart", ShoppingBag, t.nav.cart],
           ["/wishlist", Heart, t.nav.wishlist],
           ["/profile", User, t.nav.profile]
-        ].map(([to, Icon, label], idx) => (
+        ].filter(([to]) => !isAdminArea || (to !== "/cart" && to !== "/wishlist")).map(([to, Icon, label], idx) => (
           <Link key={idx} to={String(to)} className="flex flex-col items-center gap-1 text-xs text-muted-foreground">
             <Icon className="h-5 w-5" />
             {String(label)}
@@ -52,4 +67,3 @@ export function Layout() { const { t, language, setLanguage }=useTranslation(); 
       </nav>
     </div>
 }
-

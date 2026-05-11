@@ -108,6 +108,14 @@ export default function AdminDashboard() {
     },
   });
 
+  const deleteUser = useMutation({
+    mutationFn: (id: string) => api.del(`/users/${id}`),
+    onSuccess: () => {
+      toast.success("User deleted");
+      queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+    },
+  });
+
   const openProductModal = (p?: any) => {
     if (p) {
       setEditingProduct(p);
@@ -460,7 +468,19 @@ export default function AdminDashboard() {
                         </div>
                       </TableCell>
                       <TableCell className="text-right px-6">
-                        <Button variant="ghost" size="sm" className="text-xs" disabled={u.role === "admin"}>{isAr ? "تعديل" : "Edit"}</Button>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10" 
+                          disabled={u.role === "admin"}
+                          onClick={() => {
+                            if(confirm(isAr ? "هل أنت متأكد من حذف هذا المستخدم؟" : "Are you sure you want to delete this user?")) {
+                              deleteUser.mutate(u._id);
+                            }
+                          }}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}

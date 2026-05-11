@@ -247,24 +247,6 @@ export default function Home() {
         </section>
       </ScrollReveal>
 
-      <ScrollReveal>
-        <section className="section-shell py-12">
-          <EmptyState
-            title={t.home.join_list}
-            text={t.home.join_desc}
-            action={
-              <div className="mx-auto flex max-w-md gap-2">
-                <input
-                  className="min-w-0 flex-1 rounded-xl border border-input bg-background px-4 h-12"
-                  placeholder={t.common.placeholder_email}
-                />
-                <Button className="h-12 px-8 rounded-xl">{t.common.subscribe}</Button>
-              </div>
-            }
-          />
-        </section>
-      </ScrollReveal>
-
       <QuickView product={quick} open={!!quick} onOpenChange={(o) => !o && setQuick(null)} />
     </>
   );

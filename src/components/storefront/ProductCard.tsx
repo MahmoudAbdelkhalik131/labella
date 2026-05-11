@@ -6,13 +6,20 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { Product } from "@/services/types";
 import { useShop } from "@/contexts/ShopContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { useTranslation } from "@/locales/TranslationContext";
 import { api } from "@/services/api";
 
 export const money = (n?: number) => typeof n === "number" ? new Intl.NumberFormat("en", { style: "currency", currency: "USD" }).format(n) : "—";
 export const Stars = memo(({ value = 0, count }: { value?: number; count?: number }) => { return <div className="flex items-center gap-1 text-xs text-muted-foreground">{[1,2,3,4,5].map((i)=><Star key={i} className={cn("h-3.5 w-3.5", i <= Math.round(value) ? "fill-accent text-accent" : "text-muted-foreground/40")} />)}<span className="ml-1">{value?.toFixed?.(1) || "0.0"}{count ? ` (${count})` : ""}</span></div>; });
 export const ProductCard = memo(({ product, onQuickView }: { product: Product; onQuickView?: (product: Product) => void }) => {
-  const { t, isAr }=useTranslation(); const { addToCart, toggleWishlist, wishlistIds } = useShop(); const sale = product.priceAfterDiscount && product.priceAfterDiscount < product.price; const wished = wishlistIds.has(product._id); const out = product.quantity === 0;
+  const { t, isAr }=useTranslation(); 
+  const { user } = useAuth();
+  const { addToCart, toggleWishlist, wishlistIds } = useShop(); 
+  const isAdminArea = user?.role === "admin" || user?.role === "employee";
+  const sale = product.priceAfterDiscount && product.priceAfterDiscount < product.price; 
+  const wished = wishlistIds.has(product._id); 
+  const out = product.quantity === 0;
   
   return (
     <motion.article 
@@ -52,15 +59,17 @@ export const ProductCard = memo(({ product, onQuickView }: { product: Product; o
         </div>
       )}
       
-      <Button 
-        aria-label="Toggle wishlist" 
-        variant="glass" 
-        size="icon" 
-        className={cn("absolute right-3 top-3 z-10 rounded-full transition-all duration-300", wished ? "bg-white/20 text-red-500" : "bg-white/10")} 
-        onClick={() => toggleWishlist(product)}
-      >
-        <Heart className={cn("w-5 h-5 transition-all duration-300", wished && "fill-current scale-110")} />
-      </Button>
+      {!isAdminArea && (
+        <Button 
+          aria-label="Toggle wishlist" 
+          variant="glass" 
+          size="icon" 
+          className={cn("absolute right-3 top-3 z-10 rounded-full transition-all duration-300", wished ? "bg-white/20 text-red-500" : "bg-white/10")} 
+          onClick={() => toggleWishlist(product)}
+        >
+          <Heart className={cn("w-5 h-5 transition-all duration-300", wished && "fill-current scale-110")} />
+        </Button>
+      )}
 
       <div className="space-y-3 p-4">
         <div className="min-h-[60px]">
@@ -84,11 +93,13 @@ export const ProductCard = memo(({ product, onQuickView }: { product: Product; o
                 <Eye className="w-4 h-4" />
               </Button>
             </motion.div>
-            <motion.div whileTap={{ scale: 0.9 }} className="hidden md:block">
-              <Button variant="default" size="icon" className="w-9 h-9 rounded-xl shadow-lg" aria-label="Add to cart" disabled={out} onClick={() => addToCart(product)}>
-                <ShoppingBag className="w-4 h-4" />
-              </Button>
-            </motion.div>
+            {!isAdminArea && (
+              <motion.div whileTap={{ scale: 0.9 }} className="hidden md:block">
+                <Button variant="default" size="icon" className="w-9 h-9 rounded-xl shadow-lg" aria-label="Add to cart" disabled={out} onClick={() => addToCart(product)}>
+                  <ShoppingBag className="w-4 h-4" />
+                </Button>
+              </motion.div>
+            )}
           </div>
         </div>
       </div>

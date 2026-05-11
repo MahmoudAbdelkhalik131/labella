@@ -17,15 +17,16 @@ type ShopValue = {
 const ShopContext = createContext<ShopValue | null>(null);
 
 export function ShopProvider({ children }: { children: React.ReactNode }) {
-  const { isAuthed } = useAuth();
+  const { isAuthed, user } = useAuth();
   const queryClient = useQueryClient();
   const [cartPulse, setCartPulse] = useState(false);
+  const isUser = isAuthed && user?.role === "user";
 
   // Fetch Cart and Wishlist using React Query
   const cartQuery = useQuery({
     queryKey: ["cart"],
     queryFn: () => api.get<{ data: Cart }>("/cart"),
-    enabled: isAuthed,
+    enabled: isUser,
   });
 
   const wishlistQuery = useQuery({
