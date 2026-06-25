@@ -387,7 +387,10 @@ export default function AdminDashboard() {
                   {orders.data?.data?.map((o: any) => (
                     <TableRow key={o._id} className="hover:bg-muted/20 transition-colors">
                       <TableCell className="px-6 font-mono text-xs text-muted-foreground">#{o._id.slice(-8).toUpperCase()}</TableCell>
-                      <TableCell className="font-medium text-secondary text-sm">{o.user?.name || o.user?.username || "Guest"}</TableCell>
+                      <TableCell className="font-medium text-secondary text-sm">
+                        <div>{o.user?.name || o.user?.username || "Guest"}</div>
+                        {o.user?.phone && <div className="text-xs text-muted-foreground font-mono mt-0.5">{o.user.phone}</div>}
+                      </TableCell>
                       <TableCell className="font-bold text-sm">{money(o.totalPrice)}</TableCell>
                       <TableCell>
                         <Badge variant={o.isPaid ? "default" : "outline"} className={cn("text-[10px]", o.isPaid ? "bg-green-100 text-green-700 hover:bg-green-100" : "")}>

@@ -14,6 +14,17 @@ import { cn } from "@/lib/utils";
 import { useTranslation } from "@/locales/TranslationContext";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { motion, AnimatePresence } from "framer-motion";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -65,14 +76,12 @@ export default function ProductDetail() {
   };
 
   const deleteReview = async (reviewId: string) => {
-    if (confirm(isAr ? "هل أنت متأكد من حذف التقييم؟" : "Are you sure you want to delete this review?")) {
-      try {
-        await api.del(`/reviews/${reviewId}`);
-        toast.success(isAr ? "تم الحذف" : "Review deleted");
-        reviews.refetch();
-      } catch (err) {
-        toast.error("Failed to delete review");
-      }
+    try {
+      await api.del(`/reviews/${reviewId}`);
+      toast.success(isAr ? "تم الحذف" : "Review deleted");
+      reviews.refetch();
+    } catch (err) {
+      toast.error("Failed to delete review");
     }
   };
 
@@ -130,7 +139,7 @@ export default function ProductDetail() {
         >
           <div className="space-y-3">
             <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent/80">Labella / {t.nav.shop}</p>
-            <h1 className="text-3xl font-extrabold text-secondary md:text-5xl lg:text-6xl tracking-tight leading-tight">{p.name}</h1>
+            <h1 className="text-2xl font-extrabold text-secondary md:text-3xl lg:text-4xl tracking-tight leading-tight">{p.name}</h1>
             <div className="flex items-center gap-4">
               <Stars value={p.rateAvg} count={p.rating} />
               <span className="h-4 w-[1px] bg-border" />
@@ -138,7 +147,7 @@ export default function ProductDetail() {
             </div>
           </div>
 
-          <p className="text-base md:text-lg leading-relaxed text-muted-foreground line-clamp-4 hover:line-clamp-none transition-all duration-300 cursor-default">{p.description}</p>
+          <p className="text-base md:text-lg leading-relaxed text-muted-foreground cursor-default whitespace-pre-wrap">{p.description}</p>
 
           <div className="space-y-3">
             <div className="flex items-baseline gap-4">
@@ -224,9 +233,31 @@ export default function ProductDetail() {
                   </div>
                   <p className="text-lg leading-relaxed text-muted-foreground/90">{r.comment}</p>
                   {(user?.role === 'admin' || user?.role === 'employee' || user?._id === r.user?._id) && (
-                    <button onClick={() => deleteReview(r._id)} className="absolute top-8 right-8 text-destructive opacity-0 transition-opacity group-hover:opacity-100">
-                      <Trash2 className="h-5 w-5" />
-                    </button>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <button className="absolute top-8 right-8 text-destructive md:opacity-0 transition-opacity md:group-hover:opacity-100 opacity-100">
+                          <Trash2 className="h-5 w-5" />
+                        </button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            {isAr ? "حذف التقييم" : "Delete Review"}
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            {isAr 
+                              ? "هل أنت متأكد من حذف التقييم؟ لا يمكن التراجع عن هذا الإجراء." 
+                              : "Are you sure you want to delete this review? This action cannot be undone."}
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>{isAr ? "إلغاء" : "Cancel"}</AlertDialogCancel>
+                          <AlertDialogAction onClick={() => deleteReview(r._id)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                            {isAr ? "حذف" : "Delete"}
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   )}
                 </motion.div>
               ))}

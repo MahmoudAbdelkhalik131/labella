@@ -1,3 +1,158 @@
-import { Sparkles } from "lucide-react";
+import { Sparkles, Leaf, ShieldCheck, Droplet, Heart, Compass } from "lucide-react";
 import { useTranslation } from "@/locales/TranslationContext";
-export default function About(){ const { t, isAr }=useTranslation(); return <div className="section-shell py-16"><div className="rounded-[2rem] glass-panel p-8 md:p-12"><Sparkles className="h-12 w-12 text-secondary"/><h1 className="mt-5 text-5xl font-bold text-secondary md:text-7xl">{isAr ? "لابيلّا" : "Labella"}</h1><p className="mt-5 max-w-3xl text-lg text-muted-foreground">{isAr ? "وجهة تجميل دافئة وفاخرة للمكياج والعناية بالبشرة والأدوات التي تشعرين بأنها راقية دون أن تكون بعيدة. بنيت من أجل الاكتشاف والثقة وطقوس التوهج اليومية." : "A warm, premium beauty destination for makeup, skincare, and tools that feel sophisticated without feeling distant. Built for discoverability, trust, and everyday glow rituals."}</p><div className="mt-10 grid gap-4 md:grid-cols-3">{[isAr ? "منتجات أصلية" : "Authentic products", isAr ? "خدمة فاخرة دافئة" : "Warm luxury service", isAr ? "دفع آمن" : "Secure checkout"].map(x=><div key={x} className="rounded-2xl bg-primary/25 p-5 font-bold text-secondary">{x}</div>)}</div></div></div>}
+import { ScrollReveal } from "@/components/ScrollReveal";
+
+export default function About() {
+  const { isAr } = useTranslation();
+
+  return (
+    <div className="section-shell py-16 space-y-20" dir={isAr ? "rtl" : "ltr"}>
+      {/* Hero Section */}
+      <ScrollReveal>
+        <div className="rounded-[2.5rem] glass-panel p-8 md:p-16 relative overflow-hidden border border-white/5 shadow-warm">
+          {/* Subtle glowing effect background */}
+          <div className="absolute -right-20 -top-20 w-80 h-80 bg-accent/20 rounded-full blur-[80px] pointer-events-none" />
+          <div className="absolute -left-20 -bottom-20 w-80 h-80 bg-primary/20 rounded-full blur-[80px] pointer-events-none" />
+
+          <div className="relative z-10 max-w-4xl space-y-6">
+            <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.25em] text-accent-foreground/90 bg-accent/30 w-fit px-4 py-1.5 rounded-full">
+              <Sparkles className="h-4 w-4 text-accent-foreground" />
+              <span>{isAr ? " الجمال الواعي" : "Conscious Beauty"}</span>
+            </div>
+            
+            <h1 className="text-4xl md:text-6xl font-extrabold text-secondary tracking-tight leading-tight">
+              {isAr ? "لابيلّا: نقاء الطبيعة وفعالية العلم" : "Labella: Nature's Purity & Scientific Efficacy"}
+            </h1>
+            
+            <p className="text-lg md:text-xl leading-relaxed text-muted-foreground font-medium">
+              {isAr
+                ? "لابيلّا هي ملاذ فاخر مخصص لمستحضرات العناية بالبشرة، العناية بالشعر، والعناية بالجسم فائقة الجودة. نبتكر تركيباتنا بعناية فائقة، مستخلصين أنقى المكونات النباتية والفعالة لنمنح جسدكِ التغذية والإشراقة الطبيعية التي يستحقها."
+                : "Labella is a premium self-care sanctuary dedicated to high-performance skincare, haircare, and body care essentials. We formulate each blend with clean, botanical ingredients to honor your body's natural resilience and radiant glow."}
+            </p>
+          </div>
+        </div>
+      </ScrollReveal>
+
+      {/* Core Sectors */}
+      <div className="space-y-8">
+        <ScrollReveal>
+          <div className="text-center max-w-2xl mx-auto space-y-3">
+            <h2 className="text-3xl font-extrabold text-secondary tracking-tight">
+              {isAr ? " الرعاية الشاملة لدينا" : "Our Care Sectors"}
+            </h2>
+            <p className="text-muted-foreground text-sm font-semibold uppercase tracking-wider">
+              {isAr ? "مجموعات فاخرة مصممة لكل احتياجاتك" : "Premium collections tailored for your daily needs"}
+            </p>
+          </div>
+        </ScrollReveal>
+
+        <div className="grid gap-8 md:grid-cols-3">
+          {[
+            {
+              icon: Droplet,
+              titleEn: "Skincare",
+              titleAr: "العناية بالبشرة",
+              descEn: "Deeply nourishing, dermatologist-tested formulas that repair the skin barrier, lock in hydration, and unveil a luminous, dewy complexion.",
+              descAr: "تركيبات مغذية للغاية ومختبرة من قبل أطباء الجلد، تعمل على إصلاح حاجز البشرة وحبس الترطيب لتكشف عن بشرة مشرقة ونضرة.",
+              bg: "bg-primary/10 hover:bg-primary/20",
+            },
+            {
+              icon: Sparkles,
+              titleEn: "Haircare",
+              titleAr: "العناية بالشعر",
+              descEn: "Fortifying botanical treatments and daily essentials engineered to strengthen strands from root to tip, enhance natural shine, and restore bounce.",
+              descAr: "علاجات نباتية مقوية ومستحضرات يومية مصممة لتقوية خصلات الشعر من الجذور إلى الأطراف، تعزيز اللمعان الطبيعي، واستعادة الحيوية.",
+              bg: "bg-accent/15 hover:bg-accent/25",
+            },
+            {
+              icon: Heart,
+              titleEn: "Body Care",
+              titleAr: "العناية بالجسم",
+              descEn: "Indulgent textures and soothing aromatics that turn your daily shower and moisture routine into a blissful, revitalizing home spa ritual.",
+              descAr: "قوام غني وفاخر وروائح عطرية مهدئة تحول روتين الاستحمام والترطيب اليومي إلى طقس سبا منزلي مريح ومجدد للنشاط.",
+              bg: "bg-primary/10 hover:bg-primary/20",
+            },
+          ].map((item, idx) => (
+            <ScrollReveal key={idx} direction={idx === 0 ? "right" : idx === 2 ? "left" : "up"}>
+              <div className="rounded-[2rem] glass-panel p-8 h-full flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 hover:shadow-glow border border-white/5">
+                <div className="space-y-6">
+                  <div className={`p-4 rounded-2xl w-fit ${item.bg} text-secondary transition-colors`}>
+                    <item.icon className="h-8 w-8" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-secondary">
+                    {isAr ? item.titleAr : item.titleEn}
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    {isAr ? item.descAr : item.descEn}
+                  </p>
+                </div>
+              </div>
+            </ScrollReveal>
+          ))}
+        </div>
+      </div>
+
+      {/* Our Philosophy & Commitment */}
+      <ScrollReveal>
+        <div className="rounded-[2.5rem] glass-panel p-8 md:p-12 grid gap-10 md:grid-cols-2 items-center border border-white/5 shadow-warm">
+          <div className="space-y-6">
+            <div className="p-3 rounded-2xl bg-accent/20 w-fit text-accent-foreground">
+              <Compass className="h-6 w-6" />
+            </div>
+            <h2 className="text-3xl font-extrabold text-secondary tracking-tight">
+              {isAr ? "قصتنا والتزامنا" : "Our Story & Commitment"}
+            </h2>
+            <p className="text-lg leading-relaxed text-muted-foreground font-medium">
+              {isAr
+                ? "بدأت رحلتنا بدافع الشغف بالعافية الشمولية والجمال النظيف. نحن في لابيلّا نؤمن بأن العناية بشعرك وبشرتك وجسدك ليست ترفاً، بل هي طقس يومي من طقوس حب الذات وتعزيز الثقة. تمثل كل زجاجة ومرطب ننتجه وعداً بالنقاء والاستدامة والفعالية الفائقة دون مساومة."
+                : "Founded with a passion for holistic wellness, Labella bridges the gap between clean science and sensory luxury. We believe that self-care is not an indulgence, but a daily ceremony of self-love and confidence. Every elixir and cream represents a promise of purity, sustainability, and absolute efficacy."}
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-4">
+            {[
+              {
+                icon: Leaf,
+                titleEn: "Vegan & Cruelty Free",
+                titleAr: "نباتي وخالٍ من القسوة",
+                descEn: "100% plant-based formulation.",
+                descAr: "تركيبات نباتية 100% بدون تجارب على الحيوانات.",
+              },
+              {
+                icon: ShieldCheck,
+                titleEn: "Derm Tested",
+                titleAr: "مختبر جلدياً",
+                descEn: "Safe for sensitive skin.",
+                descAr: "آمن ومناسب للبشرة الحساسة.",
+              },
+              {
+                icon: Sparkles,
+                titleEn: "Clean Ingredients",
+                titleAr: "مكونات نظيفة ونقية",
+                descEn: "No parabens or toxins.",
+                descAr: "خالٍ تماماً من البارابين والسموم.",
+              },
+              {
+                icon: Leaf,
+                titleEn: "Eco-Conscious",
+                titleAr: "صديق للبيئة",
+                descEn: "Sustainable packaging.",
+                descAr: "عبوات مستدامة وقابلة لإعادة التدوير.",
+              },
+            ].map((pillar, idx) => (
+              <div key={idx} className="p-5 rounded-2xl bg-secondary/5 border border-border/40 hover:border-secondary/20 transition-all duration-300">
+                <pillar.icon className="h-6 w-6 text-secondary mb-3" />
+                <h4 className="font-bold text-secondary text-sm">
+                  {isAr ? pillar.titleAr : pillar.titleEn}
+                </h4>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {isAr ? pillar.descAr : pillar.descEn}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </ScrollReveal>
+    </div>
+  );
+}

@@ -11,8 +11,49 @@ import { useTranslation } from "@/locales/TranslationContext";
 import { api } from "@/services/api";
 
 export const money = (n?: number) => typeof n === "number" ? new Intl.NumberFormat("en", { style: "currency", currency: "USD" }).format(n) : "—";
-export const Stars = memo(({ value = 0, count }: { value?: number; count?: number }) => { return <div className="flex items-center gap-1 text-xs text-muted-foreground">{[1,2,3,4,5].map((i)=><Star key={i} className={cn("h-3.5 w-3.5", i <= Math.round(value) ? "fill-accent text-accent" : "text-muted-foreground/40")} />)}<span className="ml-1">{value?.toFixed?.(1) || "0.0"}{count ? ` (${count})` : ""}</span></div>; });
-export const ProductCard = memo(({ product, onQuickView }: { product: Product; onQuickView?: (product: Product) => void }) => {
+export const Stars = memo(({ value = 0, count }: { value?: number; count?: number }) => {
+  return (
+    <div className="flex items-center gap-1 text-xs text-muted-foreground">
+      <div className="flex items-center">
+        {[1, 2, 3, 4, 5].map((i) => {
+          if (i <= Math.floor(value)) {
+            return (
+              <Star
+                key={i}
+                className="h-3.5 w-3.5 fill-amber-400 text-amber-400"
+              />
+            );
+          } else if (i - 1 < value) {
+            const percentage = (value - Math.floor(value)) * 100;
+            return (
+              <div key={i} className="relative h-3.5 w-3.5">
+                <Star className="absolute top-0 left-0 h-3.5 w-3.5 text-muted-foreground/40" />
+                <div
+                  className="absolute top-0 left-0 overflow-hidden h-full"
+                  style={{ width: `${percentage}%` }}
+                >
+                  <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400 max-w-none" />
+                </div>
+              </div>
+            );
+          } else {
+            return (
+              <Star
+                key={i}
+                className="h-3.5 w-3.5 text-muted-foreground/40"
+              />
+            );
+          }
+        })}
+      </div>
+      <span className="ml-1">
+        {value?.toFixed?.(1) || "0.0"}
+        {count ? ` (${count})` : ""}
+      </span>
+    </div>
+  );
+});
+export const ProductCard = memo(({ product, onQuickView, noAnimate }: { product: Product; onQuickView?: (product: Product) => void; noAnimate?: boolean }) => {
   const { t, isAr }=useTranslation(); 
   const { user } = useAuth();
   const { addToCart, toggleWishlist, wishlistIds } = useShop(); 
@@ -23,9 +64,9 @@ export const ProductCard = memo(({ product, onQuickView }: { product: Product; o
   
   return (
     <motion.article 
-      layout
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      layout={!noAnimate}
+      initial={noAnimate ? undefined : { opacity: 0, y: 20 }}
+      whileInView={noAnimate ? undefined : { opacity: 1, y: 0 }}
       viewport={{ once: true }}
       whileHover={{ y: -8 }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}

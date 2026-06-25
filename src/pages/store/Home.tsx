@@ -1,8 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import { ShieldCheck, RotateCcw, LockKeyhole, ArrowRight, Play } from "lucide-react";
+import { ArrowRight, Play, ZoomIn, ChevronLeft, ChevronRight, X, Sparkles } from "lucide-react";
 import hero from "@/assets/make-it-real-hero.jpg";
-import heroVideo from "@/assets/d_c_e_d_a_fba_c_c_mp_.mp4";
+import heroVideoLight from "@/assets/d_c_e_d_a_fba_c_c_mp_.mp4";
+import heroVideoDark from "@/assets/I_need_the_same_video_but_with.mp4";
+import { useTheme } from "next-themes";
 import { api } from "@/services/api";
 import type { ApiList, Category, Product } from "@/services/types";
 import { Button } from "@/components/ui/button";
@@ -14,12 +16,177 @@ import { useTranslation } from "@/locales/TranslationContext";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { motion, AnimatePresence } from "framer-motion";
 
+// Dynamically import all review and result images
+const reviewImages = Object.values(
+  import.meta.glob("@/assets/Reviews/*.{png,jpg,jpeg,PNG,JPG,JPEG}", { eager: true, import: "default" })
+) as string[];
+
+const resultImages = Object.values(
+  import.meta.glob("@/assets/Result/*.{png,jpg,jpeg,PNG,JPG,JPEG}", { eager: true, import: "default" })
+) as string[];
+
+const slideVariants = {
+  enter: (direction: number) => ({
+    x: direction > 0 ? "100%" : "-100%",
+    opacity: 0,
+    scale: 0.98
+  }),
+  center: {
+    x: 0,
+    opacity: 1,
+    scale: 1,
+    zIndex: 1
+  },
+  exit: (direction: number) => ({
+    x: direction < 0 ? "100%" : "-100%",
+    opacity: 0,
+    scale: 0.98,
+    zIndex: 0
+  })
+};
+
+interface ImageSliderProps {
+  images: string[];
+  onImageClick: (img: string) => void;
+  aspectClass?: string;
+  maxWClass?: string;
+}
+
+function ImageSlider({ images, onImageClick, aspectClass = "aspect-[3/4]", maxWClass = "max-w-2xl" }: ImageSliderProps) {
+  const [index, setIndex] = useState(0);
+  const [direction, setDirection] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+
+  useEffect(() => {
+    if (isHovered) return;
+    const timer = setInterval(() => {
+      setDirection(1);
+      setIndex((prev) => (prev + 1) % images.length);
+    }, 4500);
+    return () => clearInterval(timer);
+  }, [index, isHovered, images.length]);
+
+  const handleNext = () => {
+    setDirection(1);
+    setIndex((prev) => (prev + 1) % images.length);
+  };
+
+  const handlePrev = () => {
+    setDirection(-1);
+    setIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
+
+  const currentImage = images[index];
+
+  return (
+    <div 
+      className={`relative mx-auto w-full flex flex-col items-center bg-card/45 border border-border/40 rounded-[2.5rem] p-6 shadow-warm backdrop-blur-md ${maxWClass}`}
+      dir="ltr"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* Slider Frame */}
+      <div 
+        onClick={() => onImageClick(currentImage)}
+        className={`relative w-full ${aspectClass} overflow-hidden rounded-[1.75rem] cursor-zoom-in bg-black/10 group border border-border/30`}
+      >
+        <AnimatePresence initial={false} custom={direction}>
+          <motion.img
+            key={currentImage}
+            src={currentImage}
+            custom={direction}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{
+              x: { type: "spring", stiffness: 260, damping: 28 },
+              opacity: { duration: 0.25 },
+              scale: { duration: 0.25 }
+            }}
+            className="absolute inset-0 h-full w-full object-contain"
+          />
+        </AnimatePresence>
+
+        {/* Hover zoom icon indicator */}
+        <div className="absolute inset-0 bg-black/35 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
+          <motion.div
+            initial={{ scale: 0.8 }}
+            whileHover={{ scale: 1 }}
+            className="rounded-full bg-white/10 text-white p-4 backdrop-blur-md border border-white/20 shadow-xl"
+          >
+            <ZoomIn className="h-6 w-6" />
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Navigation Buttons outside the main card container */}
+      <Button
+        variant="glass"
+        size="icon"
+        className="absolute -left-4 md:-left-16 top-1/2 -translate-y-1/2 h-11 w-11 rounded-full border border-border/40 bg-background/50 hover:bg-secondary/15 hover:scale-105 active:scale-95 transition-all shadow-md z-20"
+        onClick={(e) => {
+          e.stopPropagation();
+          handlePrev();
+        }}
+      >
+        <ChevronLeft className="h-5 w-5 text-secondary" />
+      </Button>
+
+      <Button
+        variant="glass"
+        size="icon"
+        className="absolute -right-4 md:-right-16 top-1/2 -translate-y-1/2 h-11 w-11 rounded-full border border-border/40 bg-background/50 hover:bg-secondary/15 hover:scale-105 active:scale-95 transition-all shadow-md z-20"
+        onClick={(e) => {
+          e.stopPropagation();
+          handleNext();
+        }}
+      >
+        <ChevronRight className="h-5 w-5 text-secondary" />
+      </Button>
+
+      {/* Dots Page Indicator */}
+      <div className="flex gap-2 mt-6">
+        {images.map((_, idx) => (
+          <button
+            key={idx}
+            onClick={(e) => {
+              e.stopPropagation();
+              setDirection(idx > index ? 1 : -1);
+              setIndex(idx);
+            }}
+            className={`h-2 rounded-full transition-all duration-300 ${
+              idx === index ? "w-6 bg-secondary" : "w-2 bg-secondary/35"
+            }`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function Home() {
   const { t, isAr } = useTranslation();
   const [quick, setQuick] = useState<Product | null>(null);
   const heroVideoRef = useRef<HTMLVideoElement | null>(null);
   const [isVideoFinished, setIsVideoFinished] = useState(false);
   const stopAtSeconds = 8.0;
+
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  const [activeTab, setActiveTab] = useState<"testimonies" | "achievements">("testimonies");
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const videoSrc = mounted && resolvedTheme === "dark" ? heroVideoDark : heroVideoLight;
+
+  useEffect(() => {
+    setIsVideoFinished(false);
+  }, [videoSrc]);
 
   const categories = useQuery({
     queryKey: ["categories"],
@@ -64,8 +231,9 @@ export default function Home() {
         {/* Cinematic Video Background */}
         <div className="absolute inset-0 z-0">
           <video
+            key={videoSrc}
             ref={heroVideoRef}
-            src={heroVideo}
+            src={videoSrc}
             aria-label="Labella cosmetics collection"
             className="h-full w-full object-cover"
             muted
@@ -110,7 +278,7 @@ export default function Home() {
                 </Link>
               </Button>
               <Button asChild variant="glass" size="lg" className="rounded-full px-10 h-14 text-lg">
-                <Link to="/categories">Explore Categories</Link>
+                <Link to="/collections">{isAr ? "استكشاف المجموعات" : "Explore Collections"}</Link>
               </Button>
             </div>
           </motion.div>
@@ -127,7 +295,7 @@ export default function Home() {
               className="absolute bottom-10 right-10 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-xl transition-all hover:bg-white/20 hover:scale-110 border border-white/20 shadow-2xl"
               title="Replay Reveal"
             >
-              <RotateCcw className="h-6 w-6" />
+              <Play className="h-6 w-6" />
             </motion.button>
           )}
         </AnimatePresence>
@@ -201,51 +369,136 @@ export default function Home() {
         </section>
       </ScrollReveal>
 
-      <ScrollReveal className="perf-optimized">
-        <section className="section-shell py-12">
-          <div className="rounded-[2rem] bg-plum p-8 text-secondary-foreground shadow-glow md:p-12 border border-white/10 relative overflow-hidden group">
-            <motion.div 
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.5 }}
-              className="relative z-10"
-            >
-              <h2 className="text-4xl font-bold">{t.home.offers_title}</h2>
-              <p className="mt-3 max-w-2xl opacity-90">{t.home.offers_desc}</p>
-              <div className="mt-6">
-                {sale[0] ? (
-                  <Button asChild variant="gold" size="lg" className="rounded-full px-8 shadow-xl">
-                    <Link to={`/products/${sale[0]._id}`}>{t.home.shop_offer}</Link>
-                  </Button>
-                ) : (
-                  <Button asChild variant="gold" size="lg" className="rounded-full px-8 shadow-xl">
-                    <Link to="/shop">{t.home.find_offers}</Link>
-                  </Button>
+      {/* Testimonies & Achievements Section - Replaces the three cards at the end of the page */}
+      <ScrollReveal>
+        <section className="section-shell py-16 space-y-10 border-t border-border/30">
+          <div className="flex justify-center">
+            <div className="inline-flex rounded-full bg-secondary/5 p-1.5 border border-border/40 backdrop-blur-md">
+              <button
+                onClick={() => setActiveTab("testimonies")}
+                className={`relative rounded-full px-8 py-3 text-base font-bold transition-all ${
+                  activeTab === "testimonies" ? "text-primary-foreground font-semibold" : "text-muted-foreground hover:text-secondary"
+                }`}
+              >
+                {activeTab === "testimonies" && (
+                  <motion.div
+                    layoutId="active-home-tab"
+                    className="absolute inset-0 rounded-full bg-secondary shadow-md"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  />
                 )}
-              </div>
-            </motion.div>
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-32 -mt-32 blur-3xl group-hover:bg-white/10 transition-colors" />
+                <span className="relative z-10">{isAr ? "شهادات وآراء العملاء" : "Testimonies"}</span>
+              </button>
+              
+              <button
+                onClick={() => setActiveTab("achievements")}
+                className={`relative rounded-full px-8 py-3 text-base font-bold transition-all ${
+                  activeTab === "achievements" ? "text-primary-foreground font-semibold" : "text-muted-foreground hover:text-secondary"
+                }`}
+              >
+                {activeTab === "achievements" && (
+                  <motion.div
+                    layoutId="active-home-tab"
+                    className="absolute inset-0 rounded-full bg-secondary shadow-md"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  />
+                )}
+                <span className="relative z-10">{isAr ? "إنجازاتنا" : "Our Achievements"}</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="min-h-[400px]">
+            <AnimatePresence mode="wait">
+              {activeTab === "testimonies" ? (
+                <motion.div
+                  key="testimonies-tab"
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  transition={{ duration: 0.1 }}
+                  className="space-y-8 animate-in fade-in duration-100"
+                >
+                  <div className="text-center max-w-2xl mx-auto space-y-3">
+                    <h2 className="text-3xl font-extrabold text-secondary tracking-tight">
+                      {isAr ? "الشهادات وآراء العملاء" : "Testimonies"}
+                    </h2>
+                    <p className="text-muted-foreground text-sm font-semibold uppercase tracking-wider">
+                      {isAr ? "تجارب حقيقية شاركها من أحبوا منتجاتنا" : "Real experiences shared by those who love our products"}
+                    </p>
+                  </div>
+
+                  {reviewImages.length > 0 && (
+                    <ImageSlider images={reviewImages} onImageClick={setSelectedImage} aspectClass="aspect-[3/4]" maxWClass="max-w-md" />
+                  )}
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="achievements-tab"
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  transition={{ duration: 0.1 }}
+                  className="space-y-8 animate-in fade-in duration-100"
+                >
+                  <div className="text-center max-w-3xl mx-auto space-y-4">
+                    <h2 className="text-3xl font-extrabold text-secondary tracking-tight">
+                      {isAr ? "إنجازاتنا" : "Our Achievements"}
+                    </h2>
+                    <div className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-accent-foreground bg-accent/20 px-4 py-1.5 rounded-full">
+                      <Sparkles className="h-4 w-4 text-accent-foreground" />
+                      <span>{isAr ? "أثر حقيقي ملموس" : "Remarkable Product Impact"}</span>
+                    </div>
+                    <p className="text-muted-foreground text-lg leading-relaxed font-medium">
+                      {isAr
+                        ? "نفخر بتقديم نتائج مثبتة ومميزة. استكشفي التحولات الحقيقية وشاهدي الأثر الرائع لمنتجاتنا على من قاموا بتجربتها بانتظام."
+                        : "Showcasing the incredible effect and visible difference our products have on those who tried them. Clean formulas, real skin transformations."}
+                    </p>
+                  </div>
+
+                  {resultImages.length > 0 && (
+                    <ImageSlider images={resultImages} onImageClick={setSelectedImage} aspectClass="aspect-[4/3]" />
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </section>
       </ScrollReveal>
 
-      <ScrollReveal direction="left">
-        <section className="section-shell grid gap-4 py-12 md:grid-cols-3">
-          {[
-            { Icon: ShieldCheck, label: t.home.authentic },
-            { Icon: RotateCcw, label: t.home.returns },
-            { Icon: LockKeyhole, label: t.home.secure },
-          ].map(({ Icon, label }, i) => (
-            <motion.div 
-              key={i} 
-              whileHover={{ y: -5 }}
-              className="rounded-2xl glass-panel p-6 text-center border border-white/5"
+      {/* Image Lightbox Overlay */}
+      <AnimatePresence>
+        {selectedImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedImage(null)}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-4 cursor-zoom-out"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="relative max-h-[90vh] max-w-[95vw] overflow-hidden rounded-3xl border border-white/10 bg-zinc-900 p-2 shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
             >
-              <Icon className="mx-auto mb-3 h-8 w-8 text-secondary" />
-              <h3 className="font-bold text-secondary">{label}</h3>
+              <button
+                onClick={() => setSelectedImage(null)}
+                className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/60 text-white border border-white/10 transition-all hover:bg-black/80 hover:scale-110"
+              >
+                <X className="h-5 w-5" />
+              </button>
+              <img
+                src={selectedImage}
+                alt="Expanded Preview"
+                className="max-h-[85vh] max-w-[90vw] rounded-2xl object-contain"
+              />
             </motion.div>
-          ))}
-        </section>
-      </ScrollReveal>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <QuickView product={quick} open={!!quick} onOpenChange={(o) => !o && setQuick(null)} />
     </>

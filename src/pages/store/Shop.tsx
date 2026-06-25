@@ -1,6 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { SlidersHorizontal, X } from "lucide-react";
 import { api } from "@/services/api";
 import type { ApiList, Category, Product, Subcategory } from "@/services/types";
@@ -102,15 +102,34 @@ export default function Shop() {
   const [max,setMax]=useState(20000); 
   const [rating,setRating]=useState(0); 
   const [showFilters, setShowFilters] = useState(false);
+  const [cols, setCols] = useState(typeof window !== "undefined" && window.innerWidth >= 1280 ? 4 : 2);
+
+  useEffect(() => {
+    const handleResize = () => setCols(window.innerWidth >= 1280 ? 4 : 2);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const sort = params.get("sort") || "-createdAt"; 
   const search = params.get("search") || ""; 
   const category = params.get("category") || ""; 
   const subcategory = params.get("subcategory") || ""; 
+  const page = parseInt(params.get("page") || "1", 10);
 
   const products = useQuery({
-    queryKey: ["products", sort, search, category, subcategory],
-    queryFn: () => api.get<ApiList<Product>>(`/products?sort=${sort}&search=${encodeURIComponent(search)}&page=1&limit=100`)
+    queryKey: ["products", sort, search, category, subcategory, page],
+    queryFn: () => {
+      const queryParams = new URLSearchParams({
+        sort,
+        search,
+        page: page.toString(),
+        limit: "8"
+      });
+      if (category) queryParams.set("category", category);
+      if (subcategory) queryParams.set("subcategory", subcategory);
+      return api.get<ApiList<Product>>(`/products?${queryParams.toString()}`);
+    },
+    placeholderData: keepPreviousData
   }); 
 
   const categories = useQuery({
@@ -141,6 +160,12 @@ export default function Shop() {
 
   const handleSubcategoryChange = (sid: string) => {
     setParams({ sort, search, category, subcategory: sid });
+  };
+
+  const handlePageChange = (newPage: number) => {
+    const nextParams = new URLSearchParams(params);
+    nextParams.set("page", newPage.toString());
+    setParams(nextParams);
   };
 
   const sharedFilterProps = {
@@ -233,30 +258,59 @@ export default function Shop() {
           ) : (
             <motion.div 
               layout
-              className="grid grid-cols-2 gap-4 xl:grid-cols-4"
+              className={cn(
+                "grid grid-cols-2 gap-4 xl:grid-cols-4 transition-opacity duration-300",
+                products.isFetching ? "opacity-60" : "opacity-100"
+              )}
             >
               <AnimatePresence mode="popLayout">
-                {filtered.map((p, i) => (
-                  <motion.div
-                    key={p._id}
-                    layout
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    transition={{ duration: 0.3, delay: i * 0.05 }}
-                  >
-                    <ProductCard product={p} onQuickView={setQuick}/>
-                  </motion.div>
-                ))}
+                {filtered.map((p, i) => {
+                  const row = Math.floor(i / cols);
+                  const col = i % cols;
+                  const entryDelay = row * 0.25 + col * 0.06;
+                  const exitDelay = row * 0.15 + col * 0.04;
+                  return (
+                    <motion.div
+                      key={p._id}
+                      layout
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ 
+                        opacity: 0, 
+                        x: -20,
+                        transition: { duration: 0.2, delay: exitDelay } 
+                      }}
+                      transition={{ duration: 0.3, delay: entryDelay }}
+                    >
+                      <ProductCard product={p} onQuickView={setQuick} noAnimate />
+                    </motion.div>
+                  );
+                })}
               </AnimatePresence>
             </motion.div>
           )}
 
-          <div className="mt-12 flex justify-center gap-2">
-            <Button variant="glass" disabled>{t.common.prev}</Button>
-            <Button variant="glass" className="bg-primary/20 text-secondary">{t.common.page} 1</Button>
-            <Button variant="glass" disabled>{t.common.next}</Button>
-          </div>
+          {products.data?.pagenation && (
+            <div className="mt-12 flex justify-center gap-2">
+              <Button 
+                variant="glass" 
+                disabled={!products.data.pagenation.prev} 
+                onClick={() => handlePageChange(products.data?.pagenation?.prev || 1)}
+              >
+                {t.common.prev}
+              </Button>
+              <Button variant="glass" className="bg-primary/20 text-secondary">
+                {t.common.page} {products.data.pagenation.currentPage}
+              </Button>
+              <Button 
+                variant="glass" 
+                disabled={!products.data.pagenation.next} 
+                onClick={() => handlePageChange(products.data?.pagenation?.next || 1)}
+              >
+                {t.common.next}
+              </Button>
+            </div>
+          )}
         </div>
       </div>
 

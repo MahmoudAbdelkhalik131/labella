@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, Clock, Package, Check, CreditCard, MapPin, Loader2 } from "lucide-react";
+import { ArrowLeft, Clock, Package, Check, CreditCard, MapPin, Loader2, User } from "lucide-react";
 import { api } from "@/services/api";
 import { useTranslation } from "@/locales/TranslationContext";
 import { money } from "@/components/storefront/ProductCard";
@@ -198,6 +198,29 @@ export default function OrderDetails() {
               </div>
             </div>
           </div>
+
+          {/* Customer Info */}
+          {o?.user && (
+            <div className="rounded-3xl glass-panel p-6 shadow-warm">
+              <h2 className="mb-4 text-xl font-bold text-secondary flex items-center gap-2">
+                <User className="h-5 w-5" />
+                {isAr ? "معلومات العميل" : "Customer Information"}
+              </h2>
+              <div className="rounded-2xl bg-background/40 p-4 border border-border/50 text-sm">
+                <div className="space-y-1.5">
+                  <p className="font-bold text-foreground text-base">
+                    {o.user?.name || o.user?.username || "Guest"}
+                  </p>
+                  {o.user?.phone && (
+                    <p className="text-muted-foreground">
+                      {isAr ? "الهاتف: " : "Phone: "}
+                      <span className="font-mono text-foreground font-semibold">{o.user.phone}</span>
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Shipping Address */}
           {o?.address && (

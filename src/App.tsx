@@ -37,7 +37,7 @@ const queryClient = new QueryClient({
 import { SmoothScroll } from "./components/SmoothScroll";
 
 const App = () => (
-  <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+  <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
     <QueryClientProvider client={queryClient}>
     <TranslationProvider>
       <TooltipProvider>
@@ -51,8 +51,9 @@ const App = () => (
                 <Routes>
                   <Route element={<Layout />}>
                     <Route path="/" element={<Home />} />
+                    <Route path="/home" element={<Home />} />
                     <Route path="/shop" element={<Shop />} />
-                    <Route path="/categories" element={<Categories />} />
+                    <Route path="/collections" element={<Categories />} />
                     <Route path="/products/:id" element={<ProductDetail />} />
                     <Route path="/cart" element={<Cart />} />
                     <Route path="/checkout" element={<Checkout />} />

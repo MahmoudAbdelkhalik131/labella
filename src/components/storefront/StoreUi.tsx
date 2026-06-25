@@ -53,4 +53,33 @@ export function EmptyState({ title, text, action }: { title: string; text: strin
     </ScrollReveal>
   ); 
 }
-export function QuickView({ product, open, onOpenChange }: { product?: Product | null; open: boolean; onOpenChange: (open: boolean) => void }) { const { t, isAr }=useTranslation(); if (!product) return null; const sale = product.priceAfterDiscount && product.priceAfterDiscount < product.price; return <Dialog open={open} onOpenChange={onOpenChange}><DialogContent className="max-w-3xl rounded-3xl glass-panel"><DialogHeader><DialogTitle className="text-3xl text-secondary">{product.name}</DialogTitle></DialogHeader><div className="grid gap-6 md:grid-cols-2"><img src={product.cover || product.images?.[0] || "/placeholder.svg"} alt={product.name} decoding="async" className="aspect-square rounded-2xl object-contain bg-muted/20 p-2"/><div className="space-y-4"><Stars value={product.rateAvg} count={product.rating}/><p className="text-muted-foreground line-clamp-5">{product.description || (isAr ? "أساسي تجميل منتقى لطقوسك اليومية." : "A luminous beauty essential selected for your everyday ritual.")}</p><div className="flex items-baseline gap-3"><span className="text-2xl font-bold text-secondary">{money(product.priceAfterDiscount || product.price)}</span>{sale && <span className="line-through text-muted-foreground">{money(product.price)}</span>}</div><Button asChild variant="hero"><Link to={`/products/${product._id}`}>{isAr ? "عرض التفاصيل" : "View details"}</Link></Button></div></div></DialogContent></Dialog>; }
+export function QuickView({ product, open, onOpenChange }: { product?: Product | null; open: boolean; onOpenChange: (open: boolean) => void }) {
+  const { t, isAr } = useTranslation();
+  if (!product) return null;
+  const sale = product.priceAfterDiscount && product.priceAfterDiscount < product.price;
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-3xl rounded-3xl glass-panel">
+        <DialogHeader>
+          <DialogTitle className="text-2xl text-secondary">{product.name}</DialogTitle>
+        </DialogHeader>
+        <div className="grid gap-6 md:grid-cols-2">
+          <img src={product.cover || product.images?.[0] || "/placeholder.svg"} alt={product.name} decoding="async" className="aspect-square rounded-2xl object-contain bg-muted/20 p-2"/>
+          <div className="space-y-4">
+            <Stars value={product.rateAvg} count={product.rating}/>
+            <p className="text-muted-foreground line-clamp-5 whitespace-pre-wrap">
+              {product.description || (isAr ? "أساسي تجميل منتقى لطقوسك اليومية." : "A luminous beauty essential selected for your everyday ritual.")}
+            </p>
+            <div className="flex items-baseline gap-3">
+              <span className="text-2xl font-bold text-secondary">{money(product.priceAfterDiscount || product.price)}</span>
+              {sale && <span className="line-through text-muted-foreground">{money(product.price)}</span>}
+            </div>
+            <Button asChild variant="hero">
+              <Link to={`/products/${product._id}`}>{isAr ? "عرض التفاصيل" : "View details"}</Link>
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}

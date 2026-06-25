@@ -2,7 +2,7 @@ export const en = {
   nav: {
     home: "Home",
     shop: "Shop",
-    categories: "Categories",
+    categories: "Collections",
     about: "About",
     login: "Login",
     logout: "Logout",
@@ -15,7 +15,7 @@ export const en = {
     hero_title: "Discover Your True Glow",
     hero_desc: "Curated makeup, skin rituals, and glow essentials wrapped in a warm luxury shopping experience.",
     shop_now: "Shop Now",
-    explore: "Explore Categories",
+    explore: "Explore Collections",
     trending: "Trending Best Sellers",
     new_arrivals: "New Arrivals",
     view_all: "View all",
@@ -120,13 +120,23 @@ export const en = {
     reset_btn: "Reset password",
     hero_title: "Beauty starts with confidence",
     hero_desc: "Sign in to track orders, save favorites, and enjoy a personalized shopping experience.",
+    signup_success_title: "Welcome to the club!",
+    signup_success: "Your account was successfully created. Please sign in to explore.",
+    validation: {
+      phone_length: "Phone number must be between 11 and 15 digits",
+      email_invalid: "Please enter a valid email address",
+      password_invalid: "Password must be 6 to 20 characters",
+      confirm_invalid: "Passwords do not match",
+      required: "This field is required"
+    },
     placeholder: {
       name: "Full name",
       username: "Username",
       email: "Email address",
       password: "Password",
       confirm: "Confirm password",
-      code: "Verification code"
+      code: "Verification code",
+      phone: "Phone number"
     }
   },
   common: {
