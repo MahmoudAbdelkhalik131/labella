@@ -377,7 +377,7 @@ export default function Home() {
               <button
                 onClick={() => setActiveTab("testimonies")}
                 className={`relative rounded-full px-8 py-3 text-base font-bold transition-all ${
-                  activeTab === "testimonies" ? "text-primary-foreground font-semibold" : "text-muted-foreground hover:text-secondary"
+                  activeTab === "testimonies" ? "text-secondary-foreground font-semibold" : "text-muted-foreground hover:text-secondary"
                 }`}
               >
                 {activeTab === "testimonies" && (
@@ -393,7 +393,7 @@ export default function Home() {
               <button
                 onClick={() => setActiveTab("achievements")}
                 className={`relative rounded-full px-8 py-3 text-base font-bold transition-all ${
-                  activeTab === "achievements" ? "text-primary-foreground font-semibold" : "text-muted-foreground hover:text-secondary"
+                  activeTab === "achievements" ? "text-secondary-foreground font-semibold" : "text-muted-foreground hover:text-secondary"
                 }`}
               >
                 {activeTab === "achievements" && (
