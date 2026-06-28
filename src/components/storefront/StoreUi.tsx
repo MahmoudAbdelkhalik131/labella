@@ -13,16 +13,6 @@ export function SectionTitle({ eyebrow, title, children }: { eyebrow?: string; t
     <ScrollReveal>
       <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div className="space-y-1">
-          {eyebrow && (
-            <motion.p 
-              initial={{ opacity: 0, x: -10 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.2em] text-accent/80"
-            >
-              <Sparkles className="h-4 w-4" />
-              {eyebrow}
-            </motion.p>
-          )}
           <h2 className="text-3xl font-extrabold text-secondary md:text-5xl tracking-tight leading-tight">{title}</h2>
         </div>
         <motion.div
@@ -68,14 +58,14 @@ export function QuickView({ product, open, onOpenChange }: { product?: Product |
           <div className="space-y-4">
             <Stars value={product.rateAvg} count={product.rating}/>
             <p className="text-muted-foreground line-clamp-5 whitespace-pre-wrap">
-              {product.description || (isAr ? "أساسي تجميل منتقى لطقوسك اليومية." : "A luminous beauty essential selected for your everyday ritual.")}
+              {product.description || ("أساسي تجميل منتقى لطقوسك اليومية.")}
             </p>
             <div className="flex items-baseline gap-3">
               <span className="text-2xl font-bold text-secondary">{money(product.priceAfterDiscount || product.price)}</span>
               {sale && <span className="line-through text-muted-foreground">{money(product.price)}</span>}
             </div>
             <Button asChild variant="hero">
-              <Link to={`/products/${product._id}`}>{isAr ? "عرض التفاصيل" : "View details"}</Link>
+              <Link to={`/products/${product._id}`}>{"عرض التفاصيل"}</Link>
             </Button>
           </div>
         </div>

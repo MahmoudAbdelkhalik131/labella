@@ -34,16 +34,16 @@ export default function Checkout() {
   const save = async (e: React.FormEvent) => {
     e.preventDefault();
     await api.post("/address", { address });
-    toast.success("Address saved");
+    toast.success("تم حفظ العنوان");
     setAddress({ street: "", city: "", state: "", zip: "" });
     addresses.refetch();
   };
 
   const place = async () => {
-    if (!selected) return toast.error("Save and select an address first");
+    if (!selected) return toast.error("يرجى حفظ واختيار عنوان أولاً");
     const res = await api.post<ApiSingle<Order>>("/order", { address: selected });
     setPlacedOrder(res.data);
-    toast.success("Order placed");
+    toast.success("تم تأكيد الطلب");
     refreshCart();
     setStep(3);
   };
@@ -54,7 +54,7 @@ export default function Checkout() {
       <div className="mb-8 grid gap-3 md:grid-cols-3">
         {t.checkout.steps.map((s, i) => (
           <div key={s} className="rounded-2xl glass-panel p-4 font-bold text-secondary">
-            <span className={cn(isAr ? "ml-2" : "mr-2")}>{i + 1}</span>
+            <span className={cn("ml-2")}>{i + 1}</span>
             {s}
           </div>
         ))}
@@ -145,22 +145,32 @@ export default function Checkout() {
           <CheckCircle2 className="mx-auto h-16 w-16 text-secondary" />
           <h2 className="mt-4 text-4xl font-bold text-secondary">{t.checkout.confirmed}</h2>
           <p className="mt-2 text-muted-foreground">{t.checkout.confirmed_desc}</p>
+          <p className="mt-4 text-lg font-bold text-secondary">
+            لتاكيد الاوردر يرجي تحويل ديبوزت نصف المبلغ والباقي عند الاستلام سوف يقوم احد ممثلين خدمة العملاء بالتواصل معك في اقرب وقت
+          </p>
           {placedOrder && (
             <div className="mx-auto mt-8 max-w-md space-y-2 text-left text-sm">
               <p className="flex justify-between">
-                <span>{t.cart.subtotal}</span>
+                <span>المجموع الفرعي</span>
                 <b>{money(placedOrder.itemsPrice)}</b>
               </p>
               <p className="flex justify-between">
-                <span>{t.cart.tax}</span>
+                <span>الضريبة</span>
                 <b>{money(placedOrder.taxPrice)}</b>
               </p>
-              <p className="flex justify-between border-t border-border pt-3 text-lg font-semibold">
-                <span>{t.cart.total}</span>
+              <p className="flex justify-between border-t border-border pt-2 text-lg text-secondary">
+                <span>الإجمالي</span>
                 <b>{money(placedOrder.totalPrice)}</b>
               </p>
+              {placedOrder.DepositeAmount != null && (
+                <p className="flex justify-between border-t border-border pt-2 text-lg text-orange-500">
+                  <span>قيمة الديبوزت المطلوبة</span>
+                  <b>{money(placedOrder.DepositeAmount)}</b>
+                </p>
+              )}
             </div>
           )}
+
         </div>
       )}
     </div>

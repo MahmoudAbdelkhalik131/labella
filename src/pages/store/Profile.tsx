@@ -60,7 +60,7 @@ export default function Profile() {
     return (
       <div className="flex h-[60vh] flex-col items-center justify-center gap-4 text-secondary">
         <Loader2 className="h-12 w-12 animate-spin" />
-        <p className="text-xl font-medium">{isAr ? "جاري التحميل..." : "Loading your profile..."}</p>
+        <p className="text-xl font-medium">{"جاري التحميل..."}</p>
       </div>
     );
   }
@@ -86,13 +86,13 @@ export default function Profile() {
         await api.put<ApiSingle<User>>("/profile/updateMe", profile);
       }
       
-      toast.success(isAr ? "تم تحديث الملف الشخصي" : "Profile updated");
+      toast.success("تم تحديث الملف الشخصي");
       setIsEditing(false);
       setSelectedFile(null);
       setPreviewUrl(null);
       refresh();
     } catch (err) {
-      toast.error(isAr ? "فشل التحديث" : "Update failed");
+      toast.error("فشل التحديث");
     }
   };
 
@@ -100,7 +100,7 @@ export default function Profile() {
     e.preventDefault();
     try {
       await api.put("/profile/change-password", pw);
-      toast.success(isAr ? "تم تغيير كلمة المرور" : "Password changed");
+      toast.success("تم تغيير كلمة المرور");
       setPw({ currantPassword: "", password: "", confirmPassword: "" });
     } catch (err) {
       // Error handled by api/toast
@@ -117,7 +117,7 @@ export default function Profile() {
   const addressList = Array.isArray(addresses.data) ? addresses.data : addresses.data?.data || [];
 
   return (
-    <div className="section-shell py-12" dir={isAr ? "rtl" : "ltr"}>
+    <div className="section-shell py-12" dir="rtl">
       <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
           <h1 className="text-5xl font-bold text-secondary">{t.profile.title}</h1>
@@ -150,7 +150,7 @@ export default function Profile() {
                   onClick={() => setIsEditing(true)}
                   className="gap-2"
                 >
-                  <Edit2 className="h-4 w-4" /> {isAr ? "تعديل" : "Edit"}
+                  <Edit2 className="h-4 w-4" /> {"تعديل"}
                 </Button>
               ) : (
                 <div className="flex gap-2">
@@ -237,7 +237,7 @@ export default function Profile() {
                 {isEditing && !selectedFile && (
                   <div className="space-y-1">
                     <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground/70">
-                      {isAr ? "رابط الصورة (اختياري)" : "Image URL (Optional)"}
+                      {"رابط الصورة (اختياري)"}
                     </label>
                     <input
                       className="w-full rounded-xl border border-border bg-background/50 p-3 transition-all focus:border-secondary focus:ring-2 focus:ring-secondary/20"
@@ -277,7 +277,7 @@ export default function Profile() {
               ))}
               {addressList.length === 0 && (
                 <div className="col-span-full py-8 text-center text-muted-foreground italic">
-                  {isAr ? "لا توجد عناوين مسجلة." : "No addresses found."}
+                  {"لا توجد عناوين مسجلة."}
                 </div>
               )}
             </div>
@@ -311,7 +311,7 @@ export default function Profile() {
           
           {user?.hasPassword === false && (
             <div className="mt-4 rounded-xl bg-amber-500/10 p-4 text-sm text-amber-600 dark:text-amber-400">
-              {isAr ? "حسابك مرتبط بجوجل، إنشاء كلمة مرور غير متاح حالياً." : "Your account is linked via Google. Direct password management is limited."}
+              {"حسابك مرتبط بجوجل، إنشاء كلمة مرور غير متاح حالياً."}
             </div>
           )}
           
@@ -325,7 +325,7 @@ export default function Profile() {
       <div className="mt-12">
         <div className="mb-6 flex items-center gap-3 text-secondary">
           <ShoppingBag className="h-6 w-6" />
-          <h2 className="text-3xl font-bold">{isAr ? "طلباتي" : "My Orders"}</h2>
+          <h2 className="text-3xl font-bold">{"طلباتي"}</h2>
         </div>
         
         <div className="grid gap-4">
@@ -335,7 +335,7 @@ export default function Profile() {
                 <div className="flex-1 space-y-2">
                   <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
                     <Clock className="h-3 w-3" />
-                    {new Date(o.createdAt).toLocaleDateString(isAr ? "ar-EG" : "en-US", { dateStyle: 'long' })}
+                    {new Date(o.createdAt).toLocaleDateString("ar-EG", { dateStyle: 'long' })}
                     <span className="mx-2 opacity-30">|</span>
                     #{o._id.slice(-8).toUpperCase()}
                   </div>
@@ -367,27 +367,33 @@ export default function Profile() {
                 
                 <div className="flex flex-wrap items-center gap-4 md:border-l md:pl-6 md:rtl:border-l-0 md:rtl:border-r md:rtl:pl-0 md:rtl:pr-6">
                   <div className="text-center">
-                    <p className="text-xs font-bold uppercase text-muted-foreground">{isAr ? "الإجمالي" : "Total"}</p>
+                    <p className="text-xs font-bold uppercase text-muted-foreground">{"الإجمالي"}</p>
                     <p className="text-xl font-bold text-secondary">{money(o.totalPrice)}</p>
                   </div>
+                  {o.DepositeAmount != null && (
+                    <div className="text-center md:border-r md:pr-4 md:ml-2">
+                      <p className="text-xs font-bold uppercase text-muted-foreground">{"الديبوزت"}</p>
+                      <p className="text-lg font-bold text-orange-500">{money(o.DepositeAmount)}</p>
+                    </div>
+                  )}
                   <div className="flex flex-col gap-1.5">
                     <div className={cn(
                       "flex items-center gap-2 rounded-full px-3 py-1 text-xs font-bold",
                       o.isPaid ? "bg-green-500/10 text-green-600" : "bg-amber-500/10 text-amber-600"
                     )}>
                       <Check className={cn("h-3 w-3", !o.isPaid && "opacity-30")} />
-                      {o.isPaid ? (isAr ? "تم الدفع" : "Paid") : (isAr ? "بانتظار الدفع" : "Pending Payment")}
+                      {o.isPaid ? ("تم الدفع") : ("بانتظار الدفع")}
                     </div>
                     <div className={cn(
                       "flex items-center gap-2 rounded-full px-3 py-1 text-xs font-bold",
-                      o.isDelivered ? "bg-blue-500/10 text-blue-600" : "bg-secondary/10 text-secondary/60"
+                      o.isDelivered ? "bg-blue-500/10 text-blue-600" : "bg-amber-500/10 text-amber-600"
                     )}>
                       <Package className={cn("h-3 w-3", !o.isDelivered && "opacity-30")} />
-                      {o.isDelivered ? (isAr ? "تم التوصيل" : "Delivered") : (isAr ? "جاري التوصيل" : "In Delivery")}
+                      {o.isDelivered ? ("تم التوصيل") : ("جاري التوصيل")}
                     </div>
                   </div>
                   <div className="flex items-center text-muted-foreground opacity-50 transition-opacity group-hover:opacity-100">
-                    <ChevronRight className={cn("h-5 w-5", isAr && "rotate-180")} />
+                    <ChevronRight className={cn("h-5 w-5", "rotate-180")} />
                   </div>
                 </div>
               </div>
@@ -399,10 +405,10 @@ export default function Profile() {
               <div className="mb-4 rounded-full bg-secondary/5 p-6">
                 <ShoppingBag className="h-12 w-12 text-muted-foreground opacity-20" />
               </div>
-              <h3 className="text-xl font-bold text-secondary">{isAr ? "لا توجد طلبات بعد" : "No orders yet"}</h3>
-              <p className="mt-2 text-muted-foreground">{isAr ? "ابدأ التسوق لتظهر طلباتك هنا." : "Start shopping to see your orders here."}</p>
+              <h3 className="text-xl font-bold text-secondary">{"لا توجد طلبات بعد"}</h3>
+              <p className="mt-2 text-muted-foreground">{"ابدأ التسوق لتظهر طلباتك هنا."}</p>
               <Button asChild variant="hero" className="mt-6">
-                <a href="/shop">{isAr ? "تسوق الآن" : "Shop Now"}</a>
+                <a href="/shop">{"تسوق الآن"}</a>
               </Button>
             </div>
           )}

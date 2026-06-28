@@ -103,7 +103,7 @@ export default function Auth() {
     setTouched(newTouched);
     
     if (hasErrors) {
-      toast.error(isAr ? "يرجى تصحيح الأخطاء في النموذج" : "Please correct the errors in the form");
+      toast.error("يرجى تصحيح الأخطاء في النموذج");
       return;
     }
     
@@ -227,9 +227,9 @@ export default function Auth() {
                 <Sparkles className="h-5 w-5" />
               </div>
               <div>
-                <p className="text-[10px] uppercase tracking-wider opacity-80">{isAr ? "مؤشر التوهج" : "Glow Index"}</p>
-                <p className="text-lg font-bold font-display leading-tight">+88% {isAr ? "إشراق" : "Radiance"}</p>
-                <span className="text-[10px] text-emerald-400 font-medium">✓ {isAr ? "تعزيز ترطيب البشرة" : "Skin Hydration Boost"}</span>
+                <p className="text-[10px] uppercase tracking-wider opacity-80">{"مؤشر التوهج"}</p>
+                <p className="text-lg font-bold font-display leading-tight">+88% {"إشراق"}</p>
+                <span className="text-[10px] text-emerald-400 font-medium">✓ {"تعزيز ترطيب البشرة"}</span>
               </div>
             </div>
 
@@ -239,9 +239,9 @@ export default function Auth() {
                 <Heart className="h-5 w-5" />
               </div>
               <div>
-                <p className="text-[10px] uppercase tracking-wider opacity-80">{isAr ? "أساسيات طبيعية" : "Essentials"}</p>
-                <p className="text-lg font-bold font-display leading-tight">100% {isAr ? "عضوي" : "Organic"}</p>
-                <span className="text-[10px] text-emerald-400 font-medium">✓ {isAr ? "معتمد كمنتج نباتي" : "Vegan Certified"}</span>
+                <p className="text-[10px] uppercase tracking-wider opacity-80">{"أساسيات طبيعية"}</p>
+                <p className="text-lg font-bold font-display leading-tight">100% {"عضوي"}</p>
+                <span className="text-[10px] text-emerald-400 font-medium">✓ {"معتمد كمنتج نباتي"}</span>
               </div>
             </div>
           </div>
@@ -259,10 +259,10 @@ export default function Auth() {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => setLanguage(language === "EN" ? "AR" : "EN")}
+                onClick={() => setLanguage(language)}
                 className="flex items-center gap-2 rounded-full border border-border bg-background/50 hover:bg-primary/20 text-xs px-3 py-1.5 text-secondary"
               >
-                <span className="text-sm font-semibold">{language === "EN" ? "🇬🇧 EN" : "🇸🇦 AR"}</span>
+                <span className="text-sm font-semibold">{language}</span>
               </Button>
             </div>
           </div>
@@ -324,10 +324,10 @@ export default function Auth() {
             </h1>
             <p className="text-sm text-muted-foreground text-center mb-8">
               {mode === "register"
-                ? (isAr ? "أنشئي حسابكِ للبدء بجمال فريد" : "Create your account to start a unique beauty journey")
+                ? ("أنشئي حسابكِ للبدء بجمال فريد")
                 : mode === "forgot"
-                ? (isAr ? "أدخلي بريدكِ الإلكتروني لاستعادة حسابكِ" : "Enter your email to recover your account")
-                : (isAr ? "سجلي الدخول لتتبع طلباتكِ المفضلة" : "Sign in to track your favorite orders")}
+                ? ("أدخلي بريدكِ الإلكتروني لاستعادة حسابكِ")
+                : ("سجلي الدخول لتتبع طلباتكِ المفضلة")}
             </p>
 
             <form onSubmit={submit} className="grid gap-5">
@@ -358,7 +358,7 @@ export default function Auth() {
             {mode === "forgot" && resetToken && (
               <div className="mt-6 rounded-2xl border border-border p-5 bg-background/40 backdrop-blur-sm animate-in fade-in duration-300">
                 <h3 className="text-sm font-semibold mb-4 text-secondary">
-                  {isAr ? "تحقق من الرمز المستلم" : "Verify Reset Code"}
+                  {"تحقق من الرمز المستلم"}
                 </h3>
                 <div className="grid gap-4">
                   {renderInput("resetcode", t.auth.placeholder.code)}
@@ -367,7 +367,7 @@ export default function Auth() {
                     variant="glass"
                     onClick={() =>
                       api.verifyCode(resetToken, form.resetcode).then(() => {
-                        toast.success(isAr ? "تم التحقق من الرمز بنجاح" : "Code verified successfully");
+                        toast.success("تم التحقق من الرمز بنجاح");
                       })
                     }
                   >
@@ -385,7 +385,7 @@ export default function Auth() {
                           confirmPassword: form.newPassword,
                         })
                         .then(() => {
-                          toast.success(isAr ? "تم إعادة تعيين كلمة المرور بنجاح" : "Password reset successfully");
+                          toast.success("تم إعادة تعيين كلمة المرور بنجاح");
                           nav("/auth/login");
                         })
                     }
@@ -400,12 +400,12 @@ export default function Auth() {
             <div className="mt-8 flex flex-wrap justify-between items-center gap-3 text-xs border-t border-border/40 pt-4">
               {mode !== "login" && (
                 <Link to="/auth/login" className="text-secondary hover:underline font-semibold">
-                  {isAr ? "← تسجيل الدخول" : "← Back to Login"}
+                  {"← تسجيل الدخول"}
                 </Link>
               )}
               {mode !== "register" && (
                 <Link to="/auth/register" className="text-secondary hover:underline font-semibold">
-                  {isAr ? "إنشاء حساب جديد" : "Create an Account"}
+                  {"إنشاء حساب جديد"}
                 </Link>
               )}
               {mode === "login" && (

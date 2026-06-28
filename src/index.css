@@ -60,55 +60,55 @@
   }
 
   .dark {
-    /* Luxurious Midnight Dark Palette - Little Light Dark with no gradients */
-    --background: 0 0% 12%;          /* A little light dark (#1e1e1e) */
-    --foreground: 38 70% 88%;        /* Champagne Gold Text & Buttons */
+    /* Luxurious Purple Palette */
+    --background: 267 35% 49%;       /* #7851A9 Background */
+    --foreground: 0 0% 100%;       /* Pure white text */
     
-    --card: 0 0% 16%;                /* Slightly lighter gray for cards (#292929) */
-    --card-foreground: 38 70% 88%;
+    --card: 267 35% 43%;             /* Slightly darker purple for cards */
+    --card-foreground: 0 0% 100%;
     
-    --popover: 0 0% 16%;
-    --popover-foreground: 38 70% 88%;
+    --popover: 267 35% 43%;
+    --popover-foreground: 0 0% 100%;
     
-    --primary: 38 75% 65%;          /* Vibrant soft gold for buttons (#e6ba66) */
-    --primary-foreground: 0 0% 12%;  /* Dark text for primary buttons */
+    --primary: 38 70% 88%;          /* Champagne gold for buttons */
+    --primary-foreground: 267 35% 49%; /* Purple text for primary buttons */
     
-    --secondary: 38 70% 88%;         /* Light gold accent */
-    --secondary-foreground: 0 0% 12%;
+    --secondary: 267 35% 55%;        /* Lighter purple accent */
+    --secondary-foreground: 0 0% 100%;
     
-    --muted: 0 0% 18%;               /* Muted carbon gray (#2e2e2e) */
-    --muted-foreground: 0 0% 65%;
+    --muted: 267 35% 40%;            /* Muted purple */
+    --muted-foreground: 0 0% 100%; /* Pure white text for all muted text */
     
-    --accent: 0 0% 20%;             /* Subtle accent highlights */
-    --accent-foreground: 38 70% 90%;
+    --accent: 38 70% 88%;           /* Gold highlights */
+    --accent-foreground: 267 35% 49%;
     
     --destructive: 0 80% 60%;
     --destructive-foreground: 210 20% 98%;
     
-    --border: 0 0% 20%;             /* Subtle dark-gray border (#333333) */
-    --input: 0 0% 20%;
-    --ring: 38 75% 65%;
+    --border: 267 35% 55%;          /* Lighter purple border */
+    --input: 267 35% 55%;
+    --ring: 38 70% 88%;
     
-    --cream: 0 0% 14%;
-    --soft: 0 0% 12%;
-    --plum: 38 75% 65%;
-    --rose: 38 75% 65%;
+    --cream: 267 35% 40%;
+    --soft: 267 35% 45%;
+    --plum: 38 70% 88%;
+    --rose: 38 70% 88%;
     --gold: 38 70% 88%;
-    --glass: 0 0% 16% / 0.75;
+    --glass: 267 35% 43% / 0.75;
     --gradient-hero: none;
     --gradient-blush: none;
     --gradient-plum: none;
     --shadow-warm: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
     --shadow-glow: 0 15px 35px -10px rgba(230, 186, 102, 0.2);
 
-    --sidebar-background: 0 0% 10%;
-    --sidebar-foreground: 38 70% 88%;
+    --sidebar-background: 267 35% 43%;
+    --sidebar-foreground: 0 0% 100%;
     --sidebar-primary: 38 70% 88%;
-    --sidebar-primary-foreground: 0 0% 12%;
-    --sidebar-accent: 0 0% 14%;
-    --sidebar-accent-foreground: 38 70% 88%;
-    --sidebar-border: 0 0% 16%;
-    --sidebar-ring: 38 75% 65%;
+    --sidebar-primary-foreground: 267 35% 49%;
+    --sidebar-accent: 267 35% 50%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 267 35% 55%;
+    --sidebar-ring: 38 70% 88%;
   }
 }
 
@@ -146,4 +146,8 @@
   .shimmer { background: linear-gradient(100deg, hsl(var(--muted)) 8%, hsl(var(--background)) 18%, hsl(var(--muted)) 33%); background-size: 200% 100%; animation: shimmer 1.4s linear infinite; }
   .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
   .scrollbar-hide::-webkit-scrollbar { display: none; }
+  
+  .dark .text-secondary {
+    color: hsl(0 0% 100%) !important;
+  }
 }

@@ -16,6 +16,11 @@ export type Order = {
   itemsPrice: number;
   taxPrice: number;
   totalPrice: number;
+  DepositeAmount?: number;
+  isDepositePaid?: boolean;
+  DepositePaidAt?: string;
+  isPaid?: boolean;
+  isDelivered?: boolean;
   address?: Address;
   createdAt?: string;
 };

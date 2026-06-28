@@ -50,7 +50,7 @@ export default function Cart() {
       if (context?.previousCart) {
         queryClient.setQueryData(["cart"], context.previousCart);
       }
-      toast.error("Failed to update quantity");
+      toast.error("فشل تحديث الكمية");
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["cart"] });
@@ -74,7 +74,7 @@ export default function Cart() {
         return { ...old, data: { ...old.data, items, totelPrice, taxPrice } };
       });
 
-      toast("Removed from cart");
+      toast("تمت الإزالة من السلة");
       return { previousCart };
     },
     onSuccess: () => {
@@ -144,7 +144,7 @@ export default function Cart() {
                     onClick={() => {
                       const stock = i.product.quantity || 0;
                       if (i.quantity >= stock) {
-                        toast.error(`Only ${stock} items available in stock`);
+                        toast.error(`متاح ${stock} قطع فقط في المخزون`);
                         return;
                       }
                       updateMutation.mutate({ productId: i.product._id, quantity: i.quantity + 1 });

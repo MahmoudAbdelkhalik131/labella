@@ -10,7 +10,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useTranslation } from "@/locales/TranslationContext";
 import { api } from "@/services/api";
 
-export const money = (n?: number) => typeof n === "number" ? new Intl.NumberFormat("en", { style: "currency", currency: "USD" }).format(n) : "—";
+export const money = (n?: number) => typeof n === "number" ? new Intl.NumberFormat("ar-EG", { style: "currency", currency: "EGP" }).format(n) : "—";
 export const Stars = memo(({ value = 0, count }: { value?: number; count?: number }) => {
   return (
     <div className="flex items-center gap-1 text-xs text-muted-foreground">
@@ -90,7 +90,7 @@ export const ProductCard = memo(({ product, onQuickView, noAnimate }: { product:
           animate={{ scale: 1 }}
           className="absolute left-3 top-3 rounded-full bg-accent/90 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-accent-foreground backdrop-blur-sm z-10"
         >
-          {isAr ? "خصم" : "Sale"}
+          {"خصم"}
         </motion.span>
       )}
       

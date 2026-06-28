@@ -184,7 +184,7 @@ export default function Shop() {
   };
 
   return (
-    <div className="section-shell py-10" dir={isAr ? "rtl" : "ltr"}>
+    <div className="section-shell py-10" dir="rtl">
       <SectionTitle eyebrow={t.nav.shop} title={t.shop.title}>
         <div className="flex items-center gap-2">
           <Button 
@@ -227,7 +227,7 @@ export default function Shop() {
           <div className="fixed inset-0 z-50 bg-secondary/30 backdrop-blur-sm lg:hidden">
             <div className={cn(
               "absolute inset-y-0 w-full max-w-sm bg-background p-6 shadow-warm transition-all duration-300",
-              isAr ? "left-0" : "right-0"
+              "left-0"
             )}>
               <div className="mb-8 flex items-center justify-between">
                 <h3 className="text-2xl font-bold text-secondary">{t.shop.filters}</h3>
@@ -237,7 +237,7 @@ export default function Shop() {
               </div>
               <FiltersContent {...sharedFilterProps} />
               <Button className="mt-8 w-full" onClick={() => setShowFilters(false)}>
-                {isAr ? "إظهار النتائج" : "Show Results"}
+                {"إظهار النتائج"}
               </Button>
             </div>
           </div>
@@ -249,9 +249,9 @@ export default function Shop() {
           ) : filtered.length === 0 ? (
             <ScrollReveal>
               <div className="rounded-[3rem] border-2 border-dashed border-border py-20 text-center bg-muted/5">
-                <p className="text-muted-foreground">{isAr ? "لا توجد منتجات مطابقة." : "No matching products found."}</p>
+                <p className="text-muted-foreground">{"لا توجد منتجات مطابقة."}</p>
                 <Button variant="ghost" className="mt-4" onClick={() => setParams({})}>
-                  {isAr ? "إعادة تعيين" : "Reset Filters"}
+                  {"إعادة تعيين"}
                 </Button>
               </div>
             </ScrollReveal>

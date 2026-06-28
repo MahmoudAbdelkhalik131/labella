@@ -22,8 +22,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
     void refresh();
   }, []);
-  const login = async (email: string, password: string, admin = false) => { const res = await api.login({ email, password }, admin); tokenStore.set(res.token); await refresh(); toast.success("Welcome back to Labella"); };
-  const logout = () => { tokenStore.clear(); setUser(null); toast("Signed out"); };
+  const login = async (email: string, password: string, admin = false) => { const res = await api.login({ email, password }, admin); tokenStore.set(res.token); await refresh(); toast.success("مرحباً بعودتك إلى لابيلّا"); };
+  const logout = () => { tokenStore.clear(); setUser(null); toast("تم تسجيل الخروج"); };
   const value = useMemo(() => ({ user, loading, isAuthed: !!user, refresh, login, logout }), [user, loading]);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

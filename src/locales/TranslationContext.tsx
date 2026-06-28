@@ -1,9 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { en } from "./en";
 import { ar } from "./ar";
 
-type TranslationType = typeof en;
-type Language = "EN" | "AR";
+type TranslationType = typeof ar;
+type Language = "AR";
 
 interface TranslationContextType {
   t: TranslationType;
@@ -15,24 +14,24 @@ interface TranslationContextType {
 const TranslationContext = createContext<TranslationContextType | undefined>(undefined);
 
 export const TranslationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [language, setLang] = useState<Language>(() => (localStorage.getItem("labella_lang") as Language) || "EN");
+  const [language, setLang] = useState<Language>("AR");
 
   const setLanguage = (lang: Language) => {
     setLang(lang);
-    localStorage.setItem("labella_lang", lang);
-    document.documentElement.dir = lang === "AR" ? "rtl" : "ltr";
-    document.documentElement.lang = lang.toLowerCase();
+    localStorage.setItem("labella_lang", "AR");
+    document.documentElement.dir = "rtl";
+    document.documentElement.lang = "ar";
   };
 
   useEffect(() => {
-    document.documentElement.dir = language === "AR" ? "rtl" : "ltr";
-    document.documentElement.lang = language.toLowerCase();
-  }, [language]);
+    document.documentElement.dir = "rtl";
+    document.documentElement.lang = "ar";
+  }, []);
 
-  const t = language === "AR" ? (ar as TranslationType) : en;
+  const t = ar;
 
   return (
-    <TranslationContext.Provider value={{ t, language, setLanguage, isAr: language === "AR" }}>
+    <TranslationContext.Provider value={{ t, language, setLanguage, isAr: true }}>
       {children}
     </TranslationContext.Provider>
   );

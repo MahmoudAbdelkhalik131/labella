@@ -41,14 +41,13 @@ export async function apiFetch<T>(
     headers.set("Content-Type", "application/json");
   if (token) headers.set("Authorization", `Bearer ${token}`);
   headers.set("ngrok-skip-browser-warning", "true");
-  const lang = localStorage.getItem("labella_lang") || "en";
   const url = new URL(`${usePrefix ? API_PREFIX : API_BASE}${path}`);
-  url.searchParams.set("language", lang.toLowerCase());
+  url.searchParams.set("language", "ar");
   const response = await fetch(url.toString(), { ...options, headers });
   const text = await response.text();
   const body = text ? JSON.parse(text) : null;
   if (!response.ok) {
-    const message = errorMessage(body) || "Something went wrong";
+    const message = errorMessage(body) || "حدث خطأ ما";
     toast.error(message);
     throw new Error(message);
   }

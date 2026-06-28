@@ -64,11 +64,11 @@ export default function ProductDetail() {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isAuthed) return toast.info("Please log in to write a review");
+    if (!isAuthed) return toast.info("يرجى تسجيل الدخول لكتابة تقييم");
     try {
       await api.post(`/products/${id}/reviews`, { comment, rate });
       setComment("");
-      toast.success("Review submitted");
+      toast.success("تم إرسال التقييم");
       reviews.refetch();
     } catch (err) {
       // Error handled by api.ts
@@ -78,17 +78,17 @@ export default function ProductDetail() {
   const deleteReview = async (reviewId: string) => {
     try {
       await api.del(`/reviews/${reviewId}`);
-      toast.success(isAr ? "تم الحذف" : "Review deleted");
+      toast.success("تم الحذف");
       reviews.refetch();
     } catch (err) {
-      toast.error("Failed to delete review");
+      toast.error("فشل حذف التقييم");
     }
   };
 
   if (product.isLoading || !p) return <div className="section-shell py-12"><ProductSkeletonGrid count={2} /></div>;
 
   return (
-    <div className="section-shell py-10" dir={isAr ? "rtl" : "ltr"}>
+    <div className="section-shell py-10" dir={"rtl"}>
       <div className="grid gap-12 lg:grid-cols-2">
         {/* Gallery */}
         <motion.div 
@@ -143,7 +143,7 @@ export default function ProductDetail() {
             <div className="flex items-center gap-4">
               <Stars value={p.rateAvg} count={p.rating} />
               <span className="h-4 w-[1px] bg-border" />
-              <span className="text-sm text-muted-foreground">{p.sold || 0} {isAr ? "بيعت" : "sold"}</span>
+              <span className="text-sm text-muted-foreground">{p.sold || 0} {"بيعت"}</span>
             </div>
           </div>
 
@@ -242,18 +242,16 @@ export default function ProductDetail() {
                       <AlertDialogContent>
                         <AlertDialogHeader>
                           <AlertDialogTitle>
-                            {isAr ? "حذف التقييم" : "Delete Review"}
+                            {"حذف التقييم"}
                           </AlertDialogTitle>
                           <AlertDialogDescription>
-                            {isAr 
-                              ? "هل أنت متأكد من حذف التقييم؟ لا يمكن التراجع عن هذا الإجراء." 
-                              : "Are you sure you want to delete this review? This action cannot be undone."}
+                            {"هل أنت متأكد من حذف التقييم؟ لا يمكن التراجع عن هذا الإجراء."}
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
-                          <AlertDialogCancel>{isAr ? "إلغاء" : "Cancel"}</AlertDialogCancel>
+                          <AlertDialogCancel>{"إلغاء"}</AlertDialogCancel>
                           <AlertDialogAction onClick={() => deleteReview(r._id)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                            {isAr ? "حذف" : "Delete"}
+                            {"حذف"}
                           </AlertDialogAction>
                         </AlertDialogFooter>
                       </AlertDialogContent>
@@ -265,7 +263,7 @@ export default function ProductDetail() {
             {(!reviews.data?.data || reviews.data.data.length === 0) && (
               <ScrollReveal>
                 <div className="rounded-[2rem] border-2 border-dashed border-border py-20 text-center italic text-muted-foreground bg-muted/5">
-                  {isAr ? "كن أول من يكتب تقييماً!" : "Be the first to write a review!"}
+                  {"كن أول من يكتب تقييماً!"}
                 </div>
               </ScrollReveal>
             )}
@@ -278,13 +276,13 @@ export default function ProductDetail() {
               <h3 className="text-2xl font-bold text-secondary">{t.product.write_review}</h3>
               <div className="mt-6 space-y-4">
                 <div>
-                  <label className="text-xs font-bold uppercase text-muted-foreground">{isAr ? "التقييم" : "Rating"}</label>
+                  <label className="text-xs font-bold uppercase text-muted-foreground">{"التقييم"}</label>
                   <select className="mt-2 w-full rounded-2xl border border-input bg-background/50 p-4 font-bold" value={rate} onChange={e => setRate(Number(e.target.value))}>
-                    {[5, 4, 3, 2, 1].map(x => <option key={x} value={x}>{x} {isAr ? "نجوم" : "stars"}</option>)}
+                    {[5, 4, 3, 2, 1].map(x => <option key={x} value={x}>{x} {"نجوم"}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs font-bold uppercase text-muted-foreground">{isAr ? "تعليقك" : "Comment"}</label>
+                  <label className="text-xs font-bold uppercase text-muted-foreground">{"تعليقك"}</label>
                   <textarea className="mt-2 min-h-[160px] w-full rounded-2xl border border-input bg-background/50 p-4 text-lg" value={comment} onChange={e => setComment(e.target.value)} placeholder={t.common.review_placeholder} />
                 </div>
                 <Button className="h-14 w-full text-lg shadow-glow rounded-2xl" size="lg">{t.product.submit}</Button>

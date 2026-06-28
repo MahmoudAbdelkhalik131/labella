@@ -45,7 +45,7 @@ export function ShopProvider({ children }: { children: React.ReactNode }) {
 
   const requireLogin = () => {
     if (!isAuthed) {
-      toast.info("Please log in to continue");
+      toast.info("يرجى تسجيل الدخول للمتابعة");
       return false;
     }
     return true;
@@ -59,7 +59,7 @@ export function ShopProvider({ children }: { children: React.ReactNode }) {
       // Optimistic Feedback
       setCartPulse(true);
       window.setTimeout(() => setCartPulse(false), 500);
-      toast.success("Added to cart");
+      toast.success("تمت الإضافة إلى السلة");
 
       // We could manually update the ["cart"] cache here if we wanted even more detail,
       // but for now, the Navbar badge is what matters most for global reactivity.
@@ -68,7 +68,7 @@ export function ShopProvider({ children }: { children: React.ReactNode }) {
       queryClient.invalidateQueries({ queryKey: ["cart"] });
     },
     onError: () => {
-      toast.error("Failed to add to cart");
+      toast.error("فشلت الإضافة إلى السلة");
     }
   });
 
@@ -94,8 +94,8 @@ export function ShopProvider({ children }: { children: React.ReactNode }) {
         }
       });
 
-      if (action === "add") toast.success("Saved to wishlist");
-      else toast("Removed from wishlist");
+      if (action === "add") toast.success("تم الحفظ في المفضلة");
+      else toast("تمت الإزالة من المفضلة");
 
       return { previousWishlist };
     },

@@ -227,7 +227,7 @@ export default function Home() {
 
   return (
     <>
-      <section className="relative w-full h-[calc(100vh-11.25rem)] min-h-[790px] flex items-center overflow-hidden bg-secondary">
+      <section className="relative w-full h-[60vh] md:h-[calc(100vh-11.25rem)] min-h-[400px] md:min-h-[790px] flex items-center overflow-hidden bg-secondary">
         {/* Cinematic Video Background */}
         <div className="absolute inset-0 z-0">
           <video
@@ -263,7 +263,7 @@ export default function Home() {
           >
             <div className="space-y-4">
               <p className="font-semibold uppercase tracking-widest text-accent/90">Beauty that feels like you</p>
-              <h1 className={cn("text-5xl font-extrabold leading-tight text-secondary-foreground md:text-8xl", isAr && "font-arabic")}>
+              <h1 className={cn("text-5xl font-extrabold leading-tight text-secondary-foreground md:text-8xl", "font-arabic")}>
                 Discover Your True Glow
               </h1>
               <p className="max-w-xl text-xl text-secondary-foreground/80 leading-relaxed">
@@ -278,7 +278,7 @@ export default function Home() {
                 </Link>
               </Button>
               <Button asChild variant="glass" size="lg" className="rounded-full px-10 h-14 text-lg">
-                <Link to="/collections">{isAr ? "استكشاف المجموعات" : "Explore Collections"}</Link>
+                <Link to="/collections">{"استكشاف المجموعات"}</Link>
               </Button>
             </div>
           </motion.div>
@@ -303,8 +303,8 @@ export default function Home() {
 
       <div className="overflow-hidden border-y border-border bg-background py-4 text-secondary">
         <div className="flex w-max animate-marquee gap-10 text-sm font-semibold uppercase tracking-widest" style={{ willChange: "transform" }}>
-          <span>Free Shipping • New Arrivals • Best Sellers • Clean Glow Picks • Free Returns • Secure Payment • </span>
-          <span>Free Shipping • New Arrivals • Best Sellers • Clean Glow Picks • Free Returns • Secure Payment • </span>
+          <span>نبتكر عناية... لا تخفي المشكلة، بل تهتم بجذورها. لابيلا تركيبات طبيعية مدروسة بطابع علاجي، صُممت بعناية لتمنح الشعر والبشرة توازنًا صحيًا ونتائج تليق بثقتك. • </span>
+          <span>نبتكر عناية... لا تخفي المشكلة، بل تهتم بجذورها. لابيلا تركيبات طبيعية مدروسة بطابع علاجي، صُممت بعناية لتمنح الشعر والبشرة توازنًا صحيًا ونتائج تليق بثقتك. • </span>
         </div>
       </div>
 
@@ -387,7 +387,7 @@ export default function Home() {
                     transition={{ type: "spring", stiffness: 380, damping: 30 }}
                   />
                 )}
-                <span className="relative z-10">{isAr ? "شهادات وآراء العملاء" : "Testimonies"}</span>
+                <span className="relative z-10">{"شهادات وآراء العملاء"}</span>
               </button>
               
               <button
@@ -403,7 +403,7 @@ export default function Home() {
                     transition={{ type: "spring", stiffness: 380, damping: 30 }}
                   />
                 )}
-                <span className="relative z-10">{isAr ? "إنجازاتنا" : "Our Achievements"}</span>
+                <span className="relative z-10">{"إنجازاتنا"}</span>
               </button>
             </div>
           </div>
@@ -421,10 +421,10 @@ export default function Home() {
                 >
                   <div className="text-center max-w-2xl mx-auto space-y-3">
                     <h2 className="text-3xl font-extrabold text-secondary tracking-tight">
-                      {isAr ? "الشهادات وآراء العملاء" : "Testimonies"}
+                      {"الشهادات وآراء العملاء"}
                     </h2>
                     <p className="text-muted-foreground text-sm font-semibold uppercase tracking-wider">
-                      {isAr ? "تجارب حقيقية شاركها من أحبوا منتجاتنا" : "Real experiences shared by those who love our products"}
+                      {"تجارب حقيقية شاركها من أحبوا منتجاتنا"}
                     </p>
                   </div>
 
@@ -443,16 +443,14 @@ export default function Home() {
                 >
                   <div className="text-center max-w-3xl mx-auto space-y-4">
                     <h2 className="text-3xl font-extrabold text-secondary tracking-tight">
-                      {isAr ? "إنجازاتنا" : "Our Achievements"}
+                      {"إنجازاتنا"}
                     </h2>
                     <div className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-accent-foreground bg-accent/20 px-4 py-1.5 rounded-full">
                       <Sparkles className="h-4 w-4 text-accent-foreground" />
-                      <span>{isAr ? "أثر حقيقي ملموس" : "Remarkable Product Impact"}</span>
+                      <span>{"أثر حقيقي ملموس"}</span>
                     </div>
                     <p className="text-muted-foreground text-lg leading-relaxed font-medium">
-                      {isAr
-                        ? "نفخر بتقديم نتائج مثبتة ومميزة. استكشفي التحولات الحقيقية وشاهدي الأثر الرائع لمنتجاتنا على من قاموا بتجربتها بانتظام."
-                        : "Showcasing the incredible effect and visible difference our products have on those who tried them. Clean formulas, real skin transformations."}
+                      {"نفخر بتقديم نتائج مثبتة ومميزة. استكشفي التحولات الحقيقية وشاهدي الأثر الرائع لمنتجاتنا على من قاموا بتجربتها بانتظام."}
                     </p>
                   </div>
 

@@ -6,7 +6,7 @@ export default function About() {
   const { isAr } = useTranslation();
 
   return (
-    <div className="section-shell py-16 space-y-20" dir={isAr ? "rtl" : "ltr"}>
+    <div className="section-shell py-16 space-y-20" dir={"rtl"}>
       {/* Hero Section */}
       <ScrollReveal>
         <div className="rounded-[2.5rem] glass-panel p-8 md:p-16 relative overflow-hidden border border-white/5 shadow-warm">
@@ -17,17 +17,15 @@ export default function About() {
           <div className="relative z-10 max-w-4xl space-y-6">
             <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.25em] text-accent-foreground/90 bg-accent/30 w-fit px-4 py-1.5 rounded-full">
               <Sparkles className="h-4 w-4 text-accent-foreground" />
-              <span>{isAr ? " الجمال الواعي" : "Conscious Beauty"}</span>
+              <span>{" الجمال الواعي"}</span>
             </div>
             
             <h1 className="text-4xl md:text-6xl font-extrabold text-secondary tracking-tight leading-tight">
-              {isAr ? "لابيلّا: نقاء الطبيعة وفعالية العلم" : "Labella: Nature's Purity & Scientific Efficacy"}
+              {"لابيلّا: نقاء الطبيعة وفعالية العلم"}
             </h1>
             
             <p className="text-lg md:text-xl leading-relaxed text-muted-foreground font-medium">
-              {isAr
-                ? "لابيلّا هي ملاذ فاخر مخصص لمستحضرات العناية بالبشرة، العناية بالشعر، والعناية بالجسم فائقة الجودة. نبتكر تركيباتنا بعناية فائقة، مستخلصين أنقى المكونات النباتية والفعالة لنمنح جسدكِ التغذية والإشراقة الطبيعية التي يستحقها."
-                : "Labella is a premium self-care sanctuary dedicated to high-performance skincare, haircare, and body care essentials. We formulate each blend with clean, botanical ingredients to honor your body's natural resilience and radiant glow."}
+              {"لابيلّا هي ملاذ فاخر مخصص لمستحضرات العناية بالبشرة، العناية بالشعر، والعناية بالجسم فائقة الجودة. نبتكر تركيباتنا بعناية فائقة، مستخلصين أنقى المكونات النباتية والفعالة لنمنح جسدكِ التغذية والإشراقة الطبيعية التي يستحقها."}
             </p>
           </div>
         </div>
@@ -38,10 +36,10 @@ export default function About() {
         <ScrollReveal>
           <div className="text-center max-w-2xl mx-auto space-y-3">
             <h2 className="text-3xl font-extrabold text-secondary tracking-tight">
-              {isAr ? " الرعاية الشاملة لدينا" : "Our Care Sectors"}
+              {" الرعاية الشاملة لدينا"}
             </h2>
             <p className="text-muted-foreground text-sm font-semibold uppercase tracking-wider">
-              {isAr ? "مجموعات فاخرة مصممة لكل احتياجاتك" : "Premium collections tailored for your daily needs"}
+              {"مجموعات فاخرة مصممة لكل احتياجاتك"}
             </p>
           </div>
         </ScrollReveal>
@@ -80,10 +78,10 @@ export default function About() {
                     <item.icon className="h-8 w-8" />
                   </div>
                   <h3 className="text-2xl font-bold text-secondary">
-                    {isAr ? item.titleAr : item.titleEn}
+                    {item.titleAr}
                   </h3>
                   <p className="text-muted-foreground leading-relaxed">
-                    {isAr ? item.descAr : item.descEn}
+                    {item.descAr}
                   </p>
                 </div>
               </div>
@@ -100,12 +98,10 @@ export default function About() {
               <Compass className="h-6 w-6" />
             </div>
             <h2 className="text-3xl font-extrabold text-secondary tracking-tight">
-              {isAr ? "قصتنا والتزامنا" : "Our Story & Commitment"}
+              {"قصتنا والتزامنا"}
             </h2>
             <p className="text-lg leading-relaxed text-muted-foreground font-medium">
-              {isAr
-                ? "بدأت رحلتنا بدافع الشغف بالعافية الشمولية والجمال النظيف. نحن في لابيلّا نؤمن بأن العناية بشعرك وبشرتك وجسدك ليست ترفاً، بل هي طقس يومي من طقوس حب الذات وتعزيز الثقة. تمثل كل زجاجة ومرطب ننتجه وعداً بالنقاء والاستدامة والفعالية الفائقة دون مساومة."
-                : "Founded with a passion for holistic wellness, Labella bridges the gap between clean science and sensory luxury. We believe that self-care is not an indulgence, but a daily ceremony of self-love and confidence. Every elixir and cream represents a promise of purity, sustainability, and absolute efficacy."}
+              {"بدأت رحلتنا بدافع الشغف بالعافية الشمولية والجمال النظيف. نحن في لابيلّا نؤمن بأن العناية بشعرك وبشرتك وجسدك ليست ترفاً، بل هي طقس يومي من طقوس حب الذات وتعزيز الثقة. تمثل كل زجاجة ومرطب ننتجه وعداً بالنقاء والاستدامة والفعالية الفائقة دون مساومة."}
             </p>
           </div>
           
@@ -143,10 +139,10 @@ export default function About() {
               <div key={idx} className="p-5 rounded-2xl bg-secondary/5 border border-border/40 hover:border-secondary/20 transition-all duration-300">
                 <pillar.icon className="h-6 w-6 text-secondary mb-3" />
                 <h4 className="font-bold text-secondary text-sm">
-                  {isAr ? pillar.titleAr : pillar.titleEn}
+                  {pillar.titleAr}
                 </h4>
                 <p className="text-xs text-muted-foreground mt-1">
-                  {isAr ? pillar.descAr : pillar.descEn}
+                  {pillar.descAr}
                 </p>
               </div>
             ))}
