@@ -321,7 +321,7 @@ export function Layout() {
         href={`https://wa.me/201093757278?text=${encodeURIComponent("ساعدني اعمل الاوردر المناسب ليا")}`}
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-24 right-4 md:bottom-8 md:right-8 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-xl hover:scale-110 active:scale-95 transition-all duration-300"
+        className="fixed bottom-24 right-4 md:bottom-8 md:right-8 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white animate-pulse-shadow-green hover:scale-110 active:scale-95 transition-all duration-300"
         aria-label="Chat on WhatsApp"
       >
         <svg
