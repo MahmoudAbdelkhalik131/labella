@@ -1,3 +1,3 @@
-# Welcome to your Lovable project
+# Labella
 
-TODO: Document your project here
+عناية بالبشرة والشعر بمكونات طبيعية - Labella Beauty E-commerce

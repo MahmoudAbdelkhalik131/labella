@@ -18,6 +18,7 @@ import Profile from "./pages/store/Profile";
 import Auth from "./pages/store/Auth";
 import SearchPage from "./pages/store/Search";
 import About from "./pages/store/About";
+import Support from "./pages/store/Support";
 import OrderDetails from "./pages/store/OrderDetails";
 import { TranslationProvider } from "./locales/TranslationContext";
 import AdminDashboard from "./pages/admin/Dashboard";
@@ -62,6 +63,7 @@ const App = () => (
                     <Route path="/orders/:id" element={<OrderDetails />} />
                     <Route path="/search" element={<SearchPage />} />
                     <Route path="/about" element={<About />} />
+                    <Route path="/support" element={<Support />} />
                     <Route path="/auth/:mode" element={<Auth />} />
                     
                     {/* Admin Routes */}

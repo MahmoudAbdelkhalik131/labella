@@ -5,28 +5,28 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
+  :root, .dark {
     /* Feminine & Warm Light Palette - Softened from Pure White */
-    --background: 350 50% 98%;     /* Lighter Creamy Blush */
-    --foreground: 330 55% 12%;     /* Very Dark Plum instead of charcoal */
+    --background: 0 0% 100%;       /* Transparent-friendly white */
+    --foreground: 0 0% 0%;         /* Pure black text */
 
-    --card: 350 50% 96%;
-    --card-foreground: 330 55% 12%;
+    --card: 0 0% 100% / 0;         /* Transparent card */
+    --card-foreground: 0 0% 0%;
 
-    --popover: 350 50% 98%;
-    --popover-foreground: 330 55% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
 
     --primary: 340 60% 80%;        /* Dusty Rose */
     --primary-foreground: 330 55% 20%;
 
-    --secondary: 330 55% 23%;      /* EXACT #5A1A3A for strong contrast */
+    --secondary: 0 0% 0%;          /* Pure black for all secondary text */
     --secondary-foreground: 350 50% 98%;
 
     --muted: 345 35% 94%;          /* Warm Mist Rose */
-    --muted-foreground: 330 20% 45%;
+    --muted-foreground: 0 0% 0%;   /* Pure black */
 
     --accent: 38 50% 85%;          /* Consistent Champagne Gold */
-    --accent-foreground: 330 55% 12%;
+    --accent-foreground: 0 0% 0%;
 
     --destructive: 0 70% 60%;
     --destructive-foreground: 350 50% 98%;
@@ -58,70 +58,36 @@
     --sidebar-border: 340 35% 88%;
     --sidebar-ring: 340 60% 80%;
   }
-
-  .dark {
-    /* Luxurious Purple Palette */
-    --background: 267 35% 49%;       /* #7851A9 Background */
-    --foreground: 0 0% 100%;       /* Pure white text */
-    
-    --card: 267 35% 43%;             /* Slightly darker purple for cards */
-    --card-foreground: 0 0% 100%;
-    
-    --popover: 267 35% 43%;
-    --popover-foreground: 0 0% 100%;
-    
-    --primary: 38 70% 88%;          /* Champagne gold for buttons */
-    --primary-foreground: 267 35% 49%; /* Purple text for primary buttons */
-    
-    --secondary: 267 35% 55%;        /* Lighter purple accent */
-    --secondary-foreground: 0 0% 100%;
-    
-    --muted: 267 35% 40%;            /* Muted purple */
-    --muted-foreground: 0 0% 100%; /* Pure white text for all muted text */
-    
-    --accent: 38 70% 88%;           /* Gold highlights */
-    --accent-foreground: 267 35% 49%;
-    
-    --destructive: 0 80% 60%;
-    --destructive-foreground: 210 20% 98%;
-    
-    --border: 267 35% 55%;          /* Lighter purple border */
-    --input: 267 35% 55%;
-    --ring: 38 70% 88%;
-    
-    --cream: 267 35% 40%;
-    --soft: 267 35% 45%;
-    --plum: 38 70% 88%;
-    --rose: 38 70% 88%;
-    --gold: 38 70% 88%;
-    --glass: 267 35% 43% / 0.75;
-    --gradient-hero: none;
-    --gradient-blush: none;
-    --gradient-plum: none;
-    --shadow-warm: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
-    --shadow-glow: 0 15px 35px -10px rgba(230, 186, 102, 0.2);
-
-    --sidebar-background: 267 35% 43%;
-    --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 38 70% 88%;
-    --sidebar-primary-foreground: 267 35% 49%;
-    --sidebar-accent: 267 35% 50%;
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 267 35% 55%;
-    --sidebar-ring: 38 70% 88%;
-  }
 }
 
 @layer base {
   * { @apply border-border; }
   html { scroll-behavior: auto !important; overflow-x: hidden; }
   body { 
-    @apply bg-background text-foreground font-body antialiased; 
-    background-image: var(--gradient-hero); 
+    @apply text-black font-body antialiased; 
     overflow-x: hidden; 
     width: 100%; 
     position: relative;
     text-rendering: optimizeSpeed;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image: url('./assets/WhatsApp Image 2026-06-28 at 2.47.57 PM.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: blur(6px);
+    transform: scale(1.05); /* prevent blur edges from showing */
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: rgba(255, 255, 255, 0.35);
   }
   h1, h2, h3, h4 { @apply font-display; letter-spacing: -0.02em; }
   img { @apply select-none; }
@@ -129,7 +95,7 @@
 
 @layer components {
   .glass-panel { 
-    @apply border-none md:border border-border/70 bg-glass/80 shadow-warm;
+    @apply border-none md:border border-border/70 shadow-warm;
     backdrop-filter: blur(8px); /* Fixed value is often more performant than variables */
     -webkit-backdrop-filter: blur(8px);
     transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease;
@@ -146,8 +112,4 @@
   .shimmer { background: linear-gradient(100deg, hsl(var(--muted)) 8%, hsl(var(--background)) 18%, hsl(var(--muted)) 33%); background-size: 200% 100%; animation: shimmer 1.4s linear infinite; }
   .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
   .scrollbar-hide::-webkit-scrollbar { display: none; }
-  
-  .dark .text-secondary {
-    color: hsl(0 0% 100%) !important;
-  }
 }

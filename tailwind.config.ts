@@ -55,7 +55,7 @@ export default {
         "accordion-up": { from: { height: "var(--radix-accordion-content-height)" }, to: { height: "0" } },
         "fade-up": { from: { opacity: "0", transform: "translateY(18px)" }, to: { opacity: "1", transform: "translateY(0)" } },
         shimmer: { to: { backgroundPosition: "-200% 0" } },
-        marquee: { from: { transform: "translateX(0)" }, to: { transform: "translateX(-50%)" } },
+        marquee: { from: { transform: "translate3d(-50%, 0, 0)" }, to: { transform: "translate3d(0, 0, 0)" } },
         heart: { "0%,100%": { transform: "scale(1)" }, "40%": { transform: "scale(1.25)" } },
         cart: { "0%,100%": { transform: "translateY(0) rotate(0deg)" }, "35%": { transform: "translateY(-4px) rotate(-8deg)" }, "70%": { transform: "translateY(0) rotate(8deg)" } },
       },

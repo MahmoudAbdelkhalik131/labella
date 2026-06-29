@@ -1,36 +1,76 @@
 import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Product } from "@/services/types";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { money, Stars } from "./ProductCard";
 import { useTranslation } from "@/locales/TranslationContext";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ScrollReveal } from "../ScrollReveal";
 
-export function SectionTitle({ eyebrow, title, children }: { eyebrow?: string; title: string; children?: React.ReactNode }) { 
+export function SectionTitle({
+  eyebrow,
+  title,
+  children,
+}: {
+  eyebrow?: string;
+  title: string;
+  children?: React.ReactNode;
+}) {
   return (
     <ScrollReveal>
-      <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <div className="mb-10 flex flex-col items-center text-center gap-4">
         <div className="space-y-1">
-          <h2 className="text-3xl font-extrabold text-secondary md:text-5xl tracking-tight leading-tight">{title}</h2>
+          <h2 className="text-3xl font-extrabold text-black md:text-4xl tracking-tight leading-tight">
+            {title}
+          </h2>
         </div>
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-        >
-          {children}
-        </motion.div>
+        {children && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+          >
+            {children}
+          </motion.div>
+        )}
       </div>
     </ScrollReveal>
-  ); 
+  );
 }
-export function ProductSkeletonGrid({ count = 8 }: { count?: number }) { return <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">{Array.from({length:count}).map((_,i)=><div key={i} className="overflow-hidden rounded-2xl glass-panel"><div className="aspect-[4/5] shimmer"/><div className="space-y-3 p-4"><div className="h-4 rounded shimmer"/><div className="h-3 w-2/3 rounded shimmer"/><div className="h-8 rounded shimmer"/></div></div>)}</div>; }
-export function EmptyState({ title, text, action }: { title: string; text: string; action?: React.ReactNode }) { 
+export function ProductSkeletonGrid({ count = 8 }: { count?: number }) {
+  return (
+    <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      {Array.from({ length: count }).map((_, i) => (
+        <div key={i} className="overflow-hidden rounded-2xl glass-panel">
+          <div className="aspect-[4/5] shimmer" />
+          <div className="space-y-3 p-4">
+            <div className="h-4 rounded shimmer" />
+            <div className="h-3 w-2/3 rounded shimmer" />
+            <div className="h-8 rounded shimmer" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+export function EmptyState({
+  title,
+  text,
+  action,
+}: {
+  title: string;
+  text: string;
+  action?: React.ReactNode;
+}) {
   return (
     <ScrollReveal>
       <div className="mx-auto max-w-md rounded-[3rem] glass-panel p-10 text-center border border-white/5 shadow-warm transition-all hover:shadow-glow">
-        <motion.div 
+        <motion.div
           whileHover={{ rotate: 15, scale: 1.1 }}
           className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-blush shadow-glow"
         >
@@ -41,28 +81,50 @@ export function EmptyState({ title, text, action }: { title: string; text: strin
         <div className="mt-8">{action}</div>
       </div>
     </ScrollReveal>
-  ); 
+  );
 }
-export function QuickView({ product, open, onOpenChange }: { product?: Product | null; open: boolean; onOpenChange: (open: boolean) => void }) {
+export function QuickView({
+  product,
+  open,
+  onOpenChange,
+}: {
+  product?: Product | null;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
   const { t, isAr } = useTranslation();
   if (!product) return null;
-  const sale = product.priceAfterDiscount && product.priceAfterDiscount < product.price;
+  const sale =
+    product.priceAfterDiscount && product.priceAfterDiscount < product.price;
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl rounded-3xl glass-panel">
         <DialogHeader>
-          <DialogTitle className="text-2xl text-secondary">{product.name}</DialogTitle>
+          <DialogTitle className="text-2xl text-secondary">
+            {product.name}
+          </DialogTitle>
         </DialogHeader>
         <div className="grid gap-6 md:grid-cols-2">
-          <img src={product.cover || product.images?.[0] || "/placeholder.svg"} alt={product.name} decoding="async" className="aspect-square rounded-2xl object-contain bg-muted/20 p-2"/>
+          <img
+            src={product.cover || product.images?.[0] || "/placeholder.svg"}
+            alt={product.name}
+            decoding="async"
+            className="aspect-square rounded-2xl object-contain bg-muted/20 p-2"
+          />
           <div className="space-y-4">
-            <Stars value={product.rateAvg} count={product.rating}/>
+            <Stars value={product.rateAvg} count={product.rating} />
             <p className="text-muted-foreground line-clamp-5 whitespace-pre-wrap">
-              {product.description || ("أساسي تجميل منتقى لطقوسك اليومية.")}
+              {product.description || "أساسي تجميل منتقى لطقوسك اليومية."}
             </p>
             <div className="flex items-baseline gap-3">
-              <span className="text-2xl font-bold text-secondary">{money(product.priceAfterDiscount || product.price)}</span>
-              {sale && <span className="line-through text-muted-foreground">{money(product.price)}</span>}
+              <span className="text-2xl font-bold text-secondary">
+                {money(product.priceAfterDiscount || product.price)}
+              </span>
+              {sale && (
+                <span className="line-through text-muted-foreground">
+                  {money(product.price)}
+                </span>
+              )}
             </div>
             <Button asChild variant="hero">
               <Link to={`/products/${product._id}`}>{"عرض التفاصيل"}</Link>

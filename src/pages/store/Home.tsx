@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Play, ZoomIn, ChevronLeft, ChevronRight, X, Sparkles } from "lucide-react";
 import hero from "@/assets/make-it-real-hero.jpg";
 import heroVideoLight from "@/assets/d_c_e_d_a_fba_c_c_mp_.mp4";
-import heroVideoDark from "@/assets/I_need_the_same_video_but_with.mp4";
+import heroVideoDark from "@/assets/d_c_e_d_a_fba_c_c_mp_.mp4";
 import { useTheme } from "next-themes";
 import { api } from "@/services/api";
 import type { ApiList, Category, Product } from "@/services/types";
@@ -301,12 +301,22 @@ export default function Home() {
         </AnimatePresence>
       </section>
 
-      <div className="overflow-hidden border-y border-border bg-background py-4 text-secondary">
-        <div className="flex w-max animate-marquee gap-10 text-sm font-semibold uppercase tracking-widest" style={{ willChange: "transform" }}>
-          <span>نبتكر عناية... لا تخفي المشكلة، بل تهتم بجذورها. لابيلا تركيبات طبيعية مدروسة بطابع علاجي، صُممت بعناية لتمنح الشعر والبشرة توازنًا صحيًا ونتائج تليق بثقتك. • </span>
-          <span>نبتكر عناية... لا تخفي المشكلة، بل تهتم بجذورها. لابيلا تركيبات طبيعية مدروسة بطابع علاجي، صُممت بعناية لتمنح الشعر والبشرة توازنًا صحيًا ونتائج تليق بثقتك. • </span>
-        </div>
-      </div>
+      {(() => {
+        const t_ = "نبتكر عناية... لا تخفي المشكلة، بل تهتم بجذورها. لابيلا تركيبات طبيعية مدروسة بطابع علاجي، صُممت بعناية لتمنح الشعر والبشرة توازنًا صحيًا ونتائج تليق بثقتك. • ";
+        const spanClass = "shrink-0 px-6 whitespace-nowrap text-sm font-semibold uppercase tracking-widest text-black";
+        return (
+          <div className="w-full overflow-hidden bg-[#F8D2E1] py-3">
+            <div className="flex animate-marquee" style={{ willChange: "transform", backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }} dir="ltr">
+              <span className={spanClass}>{t_}</span>
+              <span className={spanClass}>{t_}</span>
+              <span className={spanClass}>{t_}</span>
+              <span className={spanClass}>{t_}</span>
+              <span className={spanClass}>{t_}</span>
+              <span className={spanClass}>{t_}</span>
+            </div>
+          </div>
+        );
+      })()}
 
       <ScrollReveal className="perf-optimized">
         <section className="section-shell py-16">
@@ -320,14 +330,16 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
               >
-                <Link to={`/shop?category=${c._id}`} className="group block min-w-48 overflow-hidden rounded-2xl glass-panel border border-white/5">
-                  <img
-                    src={api.imgUrl(c.image, hero)}
-                    alt={c.name}
-                    loading="lazy"
-                    className="h-40 w-full object-cover transition-transform group-hover:scale-110 duration-500"
-                  />
-                  <div className="p-4 font-bold text-secondary">{c.name}</div>
+                <Link to={`/shop?category=${c._id}`} className="group flex flex-col items-center gap-3 min-w-[120px] md:min-w-[140px]">
+                  <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden shadow-sm group-hover:shadow-md transition-all">
+                    <img
+                      src={api.imgUrl(c.image, hero)}
+                      alt={c.name}
+                      loading="lazy"
+                      className="h-full w-full object-cover transition-transform group-hover:scale-110 duration-500 mix-blend-multiply"
+                    />
+                  </div>
+                  <div className="font-semibold text-black text-center text-sm">{c.name}</div>
                 </Link>
               </motion.div>
             ))}

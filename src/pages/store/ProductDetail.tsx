@@ -97,7 +97,7 @@ export default function ProductDetail() {
           transition={{ duration: 0.8 }}
           className="space-y-4"
         >
-          <div className="group overflow-hidden rounded-[2.5rem] glass-panel bg-white/40 shadow-warm relative aspect-[4/5] max-h-[500px] lg:max-h-[650px] mx-auto w-full">
+          <div className="group overflow-hidden rounded-[2.5rem] relative aspect-[4/5] max-h-[500px] lg:max-h-[650px] mx-auto w-full">
             <AnimatePresence mode="wait">
               <motion.img 
                 key={current}
