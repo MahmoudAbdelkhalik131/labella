@@ -289,8 +289,13 @@ export function Layout() {
             </div>
           ))}
         </div>
-        <div className="border-t border-border py-5 text-center text-sm text-muted-foreground">
-          © 2026 Labella. {t.common.all_rights}.
+        <div className="border-t border-border py-6 flex flex-col items-center justify-center gap-1.5 text-sm text-muted-foreground sm:flex-row sm:gap-3">
+          <div className="flex items-center gap-1.5">
+            <span>© 2026</span>
+            <span className="font-semibold text-secondary">Mahmoud Abdelkhalik</span>
+          </div>
+          <span className="hidden sm:inline-block opacity-50">•</span>
+          <span>{t.common.all_rights}</span>
         </div>
       </footer>
       <nav className="fixed inset-x-0 bottom-0 z-40 flex justify-around border-t border-border bg-glass/90 py-2 backdrop-blur-md md:hidden">
