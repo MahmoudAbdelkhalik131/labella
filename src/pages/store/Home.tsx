@@ -1,10 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { ArrowRight, Play, ZoomIn, ChevronLeft, ChevronRight, X, Sparkles } from "lucide-react";
-import hero from "@/assets/make-it-real-hero.jpg";
-import heroVideoLight from "@/assets/d_c_e_d_a_fba_c_c_mp_.mp4";
-import heroVideoDark from "@/assets/d_c_e_d_a_fba_c_c_mp_.mp4";
 import { useTheme } from "next-themes";
+import desktopVideo from "@/assets/d_c_e_d_a_fba_c_c_mp_.mp4";
 import { api } from "@/services/api";
 import type { ApiList, Category, Product } from "@/services/types";
 import { Button } from "@/components/ui/button";
@@ -23,6 +21,10 @@ const reviewImages = Object.values(
 
 const resultImages = Object.values(
   import.meta.glob("@/assets/Result/*.{png,jpg,jpeg,PNG,JPG,JPEG}", { eager: true, import: "default" })
+) as string[];
+
+const heroSliderImages = Object.values(
+  import.meta.glob("@/assets/Images/*.{png,jpg,jpeg,PNG,JPG,JPEG}", { eager: true, import: "default" })
 ) as string[];
 
 const slideVariants = {
@@ -50,9 +52,10 @@ interface ImageSliderProps {
   onImageClick: (img: string) => void;
   aspectClass?: string;
   maxWClass?: string;
+  fullscreen?: boolean;
 }
 
-function ImageSlider({ images, onImageClick, aspectClass = "aspect-[3/4]", maxWClass = "max-w-2xl" }: ImageSliderProps) {
+function ImageSlider({ images, onImageClick, aspectClass = "aspect-[3/4]", maxWClass = "max-w-2xl", fullscreen = false }: ImageSliderProps) {
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -80,15 +83,22 @@ function ImageSlider({ images, onImageClick, aspectClass = "aspect-[3/4]", maxWC
 
   return (
     <div 
-      className={`relative mx-auto w-full flex flex-col items-center bg-card/45 border border-border/40 rounded-[2.5rem] p-6 shadow-warm backdrop-blur-md ${maxWClass}`}
+      className={cn(
+        "relative mx-auto w-full flex flex-col items-center group/slider",
+        !fullscreen && "bg-card/45 border border-border/40 rounded-[2.5rem] p-6 shadow-warm backdrop-blur-md",
+        maxWClass
+      )}
       dir="ltr"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Slider Frame */}
       <div 
         onClick={() => onImageClick(currentImage)}
-        className={`relative w-full ${aspectClass} overflow-hidden rounded-[1.75rem] cursor-zoom-in bg-black/10 group border border-border/30`}
+        className={cn(
+          "relative w-full overflow-hidden cursor-zoom-in bg-black/10 group",
+          !fullscreen ? "rounded-[1.75rem] border border-border/30" : "rounded-none",
+          aspectClass
+        )}
       >
         <AnimatePresence initial={false} custom={direction}>
           <motion.img
@@ -104,7 +114,21 @@ function ImageSlider({ images, onImageClick, aspectClass = "aspect-[3/4]", maxWC
               opacity: { duration: 0.25 },
               scale: { duration: 0.25 }
             }}
-            className="absolute inset-0 h-full w-full object-contain"
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={1}
+            onDragEnd={(e, { offset, velocity }) => {
+              const swipe = offset.x;
+              if (swipe < -50) {
+                handleNext();
+              } else if (swipe > 50) {
+                handlePrev();
+              }
+            }}
+            className={cn(
+              "absolute inset-0 h-full w-full cursor-grab active:cursor-grabbing",
+              fullscreen ? "object-cover" : "object-contain"
+            )}
           />
         </AnimatePresence>
 
@@ -120,47 +144,56 @@ function ImageSlider({ images, onImageClick, aspectClass = "aspect-[3/4]", maxWC
         </div>
       </div>
 
-      {/* Navigation Buttons outside the main card container */}
+      {/* Navigation Buttons - Placed outside the hidden overflow frame */}
       <Button
         variant="glass"
         size="icon"
-        className="absolute -left-4 md:-left-16 top-1/2 -translate-y-1/2 h-11 w-11 rounded-full border border-border/40 bg-background/50 hover:bg-secondary/15 hover:scale-105 active:scale-95 transition-all shadow-md z-20"
+        className={cn(
+          "hidden md:flex absolute top-1/2 -translate-y-1/2 h-12 w-12 rounded-full border border-border/40 bg-background/50 hover:bg-secondary/15 hover:scale-105 active:scale-95 transition-all shadow-xl z-20",
+          fullscreen ? "-left-6 md:-left-12 lg:-left-16" : "-left-4 md:-left-16"
+        )}
         onClick={(e) => {
           e.stopPropagation();
           handlePrev();
         }}
       >
-        <ChevronLeft className="h-5 w-5 text-secondary" />
+        <ChevronLeft className="h-6 w-6 text-secondary" />
       </Button>
 
       <Button
         variant="glass"
         size="icon"
-        className="absolute -right-4 md:-right-16 top-1/2 -translate-y-1/2 h-11 w-11 rounded-full border border-border/40 bg-background/50 hover:bg-secondary/15 hover:scale-105 active:scale-95 transition-all shadow-md z-20"
+        className={cn(
+          "hidden md:flex absolute top-1/2 -translate-y-1/2 h-12 w-12 rounded-full border border-border/40 bg-background/50 hover:bg-secondary/15 hover:scale-105 active:scale-95 transition-all shadow-xl z-20",
+          fullscreen ? "-right-6 md:-right-12 lg:-right-16" : "-right-4 md:-right-16"
+        )}
         onClick={(e) => {
           e.stopPropagation();
           handleNext();
         }}
       >
-        <ChevronRight className="h-5 w-5 text-secondary" />
+        <ChevronRight className="h-6 w-6 text-secondary" />
       </Button>
 
       {/* Dots Page Indicator */}
-      <div className="flex gap-2 mt-6">
-        {images.map((_, idx) => (
-          <button
-            key={idx}
-            onClick={(e) => {
-              e.stopPropagation();
-              setDirection(idx > index ? 1 : -1);
-              setIndex(idx);
-            }}
-            className={`h-2 rounded-full transition-all duration-300 ${
-              idx === index ? "w-6 bg-secondary" : "w-2 bg-secondary/35"
-            }`}
-          />
-        ))}
-      </div>
+      {!fullscreen && (
+        <div className="flex gap-2 mt-6">
+          {images.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={(e) => {
+                e.stopPropagation();
+                setDirection(idx > index ? 1 : -1);
+                setIndex(idx);
+              }}
+              className={cn(
+                "h-2 rounded-full transition-all duration-300",
+                idx === index ? "w-6 bg-secondary" : "w-2 bg-secondary/35"
+              )}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -168,25 +201,9 @@ function ImageSlider({ images, onImageClick, aspectClass = "aspect-[3/4]", maxWC
 export default function Home() {
   const { t, isAr } = useTranslation();
   const [quick, setQuick] = useState<Product | null>(null);
-  const heroVideoRef = useRef<HTMLVideoElement | null>(null);
-  const [isVideoFinished, setIsVideoFinished] = useState(false);
-  const stopAtSeconds = 8.0;
-
-  const { resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
 
   const [activeTab, setActiveTab] = useState<"testimonies" | "achievements">("testimonies");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const videoSrc = mounted && resolvedTheme === "dark" ? heroVideoDark : heroVideoLight;
-
-  useEffect(() => {
-    setIsVideoFinished(false);
-  }, [videoSrc]);
 
   const categories = useQuery({
     queryKey: ["categories"],
@@ -205,100 +222,31 @@ export default function Home() {
     (p) => p.priceAfterDiscount && p.priceAfterDiscount < p.price
   );
 
-  const handleHeroTimeUpdate = () => {
-    const video = heroVideoRef.current;
-    if (!video) return;
-    
-    if (video.currentTime >= stopAtSeconds || video.ended) {
-      video.pause();
-      if (video.currentTime > stopAtSeconds) video.currentTime = stopAtSeconds;
-      setIsVideoFinished(true);
-    }
-  };
-
-  const handleReplay = () => {
-    const video = heroVideoRef.current;
-    if (video) {
-      video.currentTime = 0;
-      video.play();
-      setIsVideoFinished(false);
-    }
-  };
-
   return (
     <>
-      <section className="relative w-full h-[60vh] md:h-[calc(100vh-11.25rem)] min-h-[400px] md:min-h-[790px] flex items-center overflow-hidden bg-secondary">
-        {/* Cinematic Video Background */}
-        <div className="absolute inset-0 z-0">
-          <video
-            key={videoSrc}
-            ref={heroVideoRef}
-            src={videoSrc}
-            aria-label="Labella cosmetics collection"
-            className="h-full w-full object-cover"
-            muted
-            playsInline
-            autoPlay
-            preload="auto"
-            onTimeUpdate={handleHeroTimeUpdate}
-            onEnded={handleHeroTimeUpdate}
-          />
-          
-          {/* Overlays for depth and readability */}
-          <div className="absolute inset-0 bg-gradient-to-r from-secondary/80 via-secondary/40 to-transparent z-10" />
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={isVideoFinished ? { opacity: 0.3 } : { opacity: 0 }}
-            className="absolute inset-0 bg-black z-20 pointer-events-none"
-          />
-        </div>
+      <section className="relative w-full h-[60vh] md:h-[calc(100vh-11.25rem)] min-h-[400px] md:min-h-[790px] flex items-center justify-center overflow-hidden md:py-4">
+        {/* Desktop Video */}
+        <video
+          src={desktopVideo}
+          className="hidden md:block w-[90%] h-full object-cover rounded-[2rem] shadow-2xl border border-white/10"
+          muted
+          autoPlay
+          loop
+          playsInline
+        />
 
-        {/* Content Reveal */}
-        <div className="section-shell relative z-30 w-full">
-          <motion.div 
-            initial={{ opacity: 0, x: -30 }}
-            animate={isVideoFinished ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
-            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-            className="max-w-2xl space-y-8"
-          >
-            <div className="space-y-4">
-              <p className="font-semibold uppercase tracking-widest text-accent/90">Beauty that feels like you</p>
-              <h1 className={cn("text-5xl font-extrabold leading-tight text-secondary-foreground md:text-8xl", "font-arabic")}>
-                Discover Your True Glow
-              </h1>
-              <p className="max-w-xl text-xl text-secondary-foreground/80 leading-relaxed">
-                Curated makeup, skin rituals, and glow essentials wrapped in a warm luxury shopping experience.
-              </p>
-            </div>
-            
-            <div className="flex flex-wrap gap-4">
-              <Button asChild variant="hero" size="lg" className="rounded-full px-10 h-14 text-lg shadow-glow">
-                <Link to="/shop">
-                  Shop Now <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
-              <Button asChild variant="glass" size="lg" className="rounded-full px-10 h-14 text-lg">
-                <Link to="/collections">{"استكشاف المجموعات"}</Link>
-              </Button>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Replay Button */}
-        <AnimatePresence>
-          {isVideoFinished && (
-            <motion.button
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              onClick={handleReplay}
-              className="absolute bottom-10 right-10 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-xl transition-all hover:bg-white/20 hover:scale-110 border border-white/20 shadow-2xl"
-              title="Replay Reveal"
-            >
-              <Play className="h-6 w-6" />
-            </motion.button>
+        {/* Mobile Image Slider */}
+        <div className="block md:hidden w-full h-full">
+          {heroSliderImages.length > 0 && (
+            <ImageSlider 
+              images={heroSliderImages} 
+              onImageClick={setSelectedImage} 
+              aspectClass="h-[60vh] min-h-[400px] w-full rounded-none" 
+              maxWClass="w-full max-w-none" 
+              fullscreen={true}
+            />
           )}
-        </AnimatePresence>
+        </div>
       </section>
 
       {(() => {
@@ -333,7 +281,7 @@ export default function Home() {
                 <Link to={`/shop?category=${c._id}`} className="group flex flex-col items-center gap-3 min-w-[120px] md:min-w-[140px]">
                   <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden shadow-sm group-hover:shadow-md transition-all">
                     <img
-                      src={api.imgUrl(c.image, hero)}
+                      src={api.imgUrl(c.image)}
                       alt={c.name}
                       loading="lazy"
                       className="h-full w-full object-cover transition-transform group-hover:scale-110 duration-500 mix-blend-multiply"

@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useSearchParams, useLocation } from "react-router-dom";
-import { Sparkles, CheckCircle2, XCircle, X, Eye, EyeOff, Heart } from "lucide-react";
+import { CheckCircle2, XCircle, X, Eye, EyeOff, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { api } from "@/services/api";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTranslation } from "@/locales/TranslationContext";
 import { cn } from "@/lib/utils";
-import heroImg from "../../assets/Gemini_Generated_Image_clwbjeclwbjeclwbm.png";
 
 export default function Auth() {
   const { t, isAr, language, setLanguage } = useTranslation();
@@ -202,53 +201,10 @@ export default function Auth() {
 
   return (
     <div className="section-shell py-10 min-h-[calc(100vh-5rem)] flex items-center justify-center">
-      <div className="w-full max-w-6xl rounded-3xl overflow-hidden glass-panel border border-border/60 grid lg:grid-cols-12 min-h-[640px] shadow-warm bg-card">
+      <div className="w-full max-w-lg rounded-3xl overflow-hidden glass-panel border border-border/60 min-h-[640px] shadow-warm bg-card/65 backdrop-blur-md">
         
-        {/* Left Side: Brand Visual */}
-        <div className="lg:col-span-5 relative hidden lg:flex flex-col justify-between p-8 text-white select-none overflow-hidden bg-secondary/20">
-          <img
-            src={heroImg}
-            alt="Labella Beauty Backdrop"
-            className="absolute inset-0 w-full h-full object-cover z-0 transition-transform duration-700 hover:scale-105"
-            onError={(e) => {
-              (e.target as HTMLElement).style.display = "none";
-            }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-plum/90 via-plum/45 to-transparent dark:from-background/95 dark:via-background/50 dark:to-transparent z-10" />
-          
-          <div className="relative z-20 font-script text-4xl text-primary-foreground font-semibold tracking-wide">
-            Labella
-          </div>
-          
-          <div className="relative z-20 flex flex-col gap-4 mt-auto">
-            {/* Glow Index Card */}
-            <div className="bg-white/10 dark:bg-black/30 backdrop-blur-md border border-white/25 dark:border-white/10 p-4 rounded-2xl flex items-center gap-3 shadow-lg transition-transform hover:scale-[1.03] duration-300">
-              <div className="p-2.5 rounded-xl bg-primary/25 text-primary-foreground dark:text-primary shrink-0">
-                <Sparkles className="h-5 w-5" />
-              </div>
-              <div>
-                <p className="text-[10px] uppercase tracking-wider opacity-80">{"مؤشر التوهج"}</p>
-                <p className="text-lg font-bold font-display leading-tight">+88% {"إشراق"}</p>
-                <span className="text-[10px] text-emerald-400 font-medium">✓ {"تعزيز ترطيب البشرة"}</span>
-              </div>
-            </div>
-
-            {/* Essentials Card */}
-            <div className="bg-white/10 dark:bg-black/30 backdrop-blur-md border border-white/25 dark:border-white/10 p-4 rounded-2xl flex items-center gap-3 shadow-lg transition-transform hover:scale-[1.03] duration-300">
-              <div className="p-2.5 rounded-xl bg-accent/25 text-accent-foreground dark:text-primary shrink-0">
-                <Heart className="h-5 w-5" />
-              </div>
-              <div>
-                <p className="text-[10px] uppercase tracking-wider opacity-80">{"أساسيات طبيعية"}</p>
-                <p className="text-lg font-bold font-display leading-tight">100% {"عضوي"}</p>
-                <span className="text-[10px] text-emerald-400 font-medium">✓ {"معتمد كمنتج نباتي"}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Right Side: Form Content */}
-        <div className="lg:col-span-7 p-6 sm:p-10 md:p-12 flex flex-col justify-between bg-card/65 backdrop-blur-md">
+        {/* Form Content */}
+        <div className="p-6 sm:p-10 md:p-12 flex flex-col justify-between">
           {/* Header Section */}
           <div className="flex justify-between items-center w-full mb-8">
             <Link to="/" className="font-script text-3xl text-secondary lg:hidden link-focus">

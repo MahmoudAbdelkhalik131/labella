@@ -73,7 +73,7 @@ const FiltersContent = ({
         className="mt-2 w-full accent-secondary" 
         type="range" 
         min="10" 
-        max="20000" 
+        max="5000" 
         step="100"
         value={max} 
         onChange={e => onMaxChange(Number(e.target.value))}
@@ -99,7 +99,7 @@ export default function Shop() {
   const { t, isAr }=useTranslation(); 
   const [params,setParams]=useSearchParams(); 
   const [quick,setQuick]=useState<Product|null>(null); 
-  const [max,setMax]=useState(20000); 
+  const [max,setMax]=useState(5000); 
   const [rating,setRating]=useState(0); 
   const [showFilters, setShowFilters] = useState(false);
   const [cols, setCols] = useState(typeof window !== "undefined" && window.innerWidth >= 1280 ? 4 : 2);
